@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    <com.github.chrisbanes.photoview.PhotoView
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.otaliastudios.zoom.ZoomLayout
+        android:id="@+id/zoom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:transformation="centerCrop"
+        app:transformationGravity="center"
+        app:overScrollHorizontal="false"
+        app:overScrollVertical="false"
+        app:overPinchable="false"
+        app:oneFingerScrollEnabled="true"
+        app:twoFingersScrollEnabled="true"
+        app:threeFingersScrollEnabled="false"
+        app:minZoom="1"
+        app:minZoomType="zoom"
+        app:maxZoom="3"
+        app:maxZoomType="zoom"
+        app:animationDuration="280"
+        app:hasClickableChildren="false">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/lomo1"
+            android:scaleType="centerCrop"/>
+    </com.otaliastudios.zoom.ZoomLayout>
+
+    <RelativeLayout
+        android:id="@+id/markers_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

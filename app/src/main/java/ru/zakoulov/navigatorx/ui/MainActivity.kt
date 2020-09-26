@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, MapFragment.getInstance())
+            .replace(R.id.container, MapFragment.instance)
             .addToBackStack(MapFragment.TAG)
             .commit()
     }
