@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.TextView
-import androidx.core.view.forEachIndexed
 import androidx.fragment.app.Fragment
 import com.otaliastudios.zoom.ZoomEngine
 import kotlinx.android.synthetic.main.fragment_map.markers_layout
@@ -30,14 +29,17 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val layoutInflater = LayoutInflater.from(view.context)
+        val before = System.currentTimeMillis()
         markersData.forEach {
-            val view = layoutInflater.inflate(R.layout.marker, markers_layout, false)
+            val view = layoutInflater.inflate(R.layout.marker_2, markers_layout, false)
             val viewHolder = MarkerViewHolder(view).apply {
                 setupWith(it)
             }
             markers.add(viewHolder)
             markers_layout.addView(view)
         }
+        val after = System.currentTimeMillis()
+        Log.d(TAG, "onViewCreated: ${after - before}")
         zoom_layout.engine.addListener(object : ZoomEngine.Listener {
             override fun onIdle(engine: ZoomEngine) = Unit
 
