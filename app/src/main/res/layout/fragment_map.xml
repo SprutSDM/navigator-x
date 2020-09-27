@@ -18,7 +18,7 @@
         app:threeFingersScrollEnabled="false"
         app:minZoom="1"
         app:minZoomType="zoom"
-        app:maxZoom="3"
+        app:maxZoom="6"
         app:maxZoomType="zoom"
         app:animationDuration="280"
         app:hasClickableChildren="false">
