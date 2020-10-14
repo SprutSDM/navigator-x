@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NavigatorX</string>
+    <string name="pick_building_title">Выбор корпуса</string>
 </resources>

@@ -44,6 +44,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
+
+    implementation "com.google.android.material:material:$materialVersion"
 
     annotationProcessor "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
 

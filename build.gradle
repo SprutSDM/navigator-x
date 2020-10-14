@@ -26,7 +26,7 @@ allprojects {
 }
 
 ext {
-    minSdkVersion = 21
+    minSdkVersion = 23
     targetSdkVersion = 30
     compileSdkVersion = 30
 
@@ -36,6 +36,8 @@ ext {
     constraintLayoutVersion = '2.0.1'
     fragmentVersion = '1.2.5'
     lifecycleVersion = '2.2.0'
+    recyclerViewVersion = '1.1.0'
+    materialVersion = '1.2.1'
 
     photoViewVersion = '2.0.0'
 
