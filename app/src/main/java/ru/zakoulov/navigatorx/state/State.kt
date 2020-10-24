@@ -18,4 +18,10 @@ sealed class MapState(
         override val buildings: List<Building>,
         override val selectedBuilding: Building
     ) : MapState(buildings, selectedBuilding)
+
+    data class RoomSelected(
+        override val buildings: List<Building>,
+        override val selectedBuilding: Building,
+        val roomNumber: String
+    ) : MapState(buildings, selectedBuilding)
 }

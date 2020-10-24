@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.zakoulov.navigatorx.data.Building
+import ru.zakoulov.navigatorx.data.Room
 import ru.zakoulov.navigatorx.state.MapState
 import ru.zakoulov.navigatorx.state.State
 
@@ -23,6 +24,38 @@ class MainViewModel : ViewModel() {
                 ))
             }
         }
+    }
+
+    fun onRoomInfoBSClosed() {
+        val currentState = state.value
+        if (currentState is State.Map && currentState.mapState !is MapState.Viewing) {
+            transformToViewingState(currentState)
+        }
+    }
+
+    fun onRoomSelected(roomNumber: String) {
+        val currentState = state.value
+        if (currentState is State.Map) {
+            _state.value = currentState.copy(mapState = MapState.RoomSelected(
+                buildings = currentState.mapState.buildings,
+                selectedBuilding = currentState.mapState.selectedBuilding,
+                roomNumber = roomNumber
+            ))
+        }
+    }
+
+    fun onOutsideClick() {
+        val currentState = state.value
+        if (currentState is State.Map) {
+            transformToViewingState(currentState)
+        }
+    }
+
+    private fun transformToViewingState(currentState: State.Map) {
+        _state.value = currentState.copy(mapState = MapState.Viewing(
+            buildings = currentState.mapState.buildings,
+            selectedBuilding = currentState.mapState.selectedBuilding
+        ))
     }
 
     companion object {

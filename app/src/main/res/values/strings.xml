@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">NavigatorX</string>
     <string name="pick_building_title">Выбор корпуса</string>
+    <string name="button_here">СЮДА</string>
+    <string name="from_here">ОТСЮДА</string>
 </resources>

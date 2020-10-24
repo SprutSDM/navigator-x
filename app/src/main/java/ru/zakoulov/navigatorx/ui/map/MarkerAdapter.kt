@@ -1,20 +1,21 @@
 package ru.zakoulov.navigatorx.ui.map
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.TextView
 import com.otaliastudios.zoom.ZoomMapAdapter
 import com.otaliastudios.zoom.ZoomMapViewHolder
 import ru.zakoulov.navigatorx.R
 import ru.zakoulov.navigatorx.map.Marker
 
-class MarkerAdapter(private val data: List<Marker>) : ZoomMapAdapter<MarkerAdapter.MarkerViewHolder>() {
+class MarkerAdapter(
+    private val data: List<Marker>,
+    private val callbacks: MarkerCallbacks
+) : ZoomMapAdapter<MarkerAdapter.MarkerViewHolder>() {
     override fun createViewHolder(parent: ViewGroup): MarkerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.marker, parent, false)
-        return MarkerViewHolder(view)
+        return MarkerViewHolder(view, callbacks)
     }
 
     override fun bindViewHolder(viewHolder: MarkerViewHolder, position: Int) {
@@ -24,7 +25,7 @@ class MarkerAdapter(private val data: List<Marker>) : ZoomMapAdapter<MarkerAdapt
 
     override fun getChildCount() = data.size
 
-    class MarkerViewHolder(view: View) : ZoomMapViewHolder(view) {
+    class MarkerViewHolder(view: View, private val callbacks: MarkerCallbacks) : ZoomMapViewHolder(view) {
         private var id: Int = 0
         private var positionX: Float = 0f
         private var positionY: Float = 0f
@@ -42,14 +43,14 @@ class MarkerAdapter(private val data: List<Marker>) : ZoomMapAdapter<MarkerAdapt
             id = markerData.id
             view.visibility = View.INVISIBLE
             view.setOnClickListener {
-                Log.d(TAG, "setupViewHolder: onClicked ${markerData.label}")
+                callbacks.onMarkerSelected(markerData)
             }
         }
 
         override fun getPositionX() = positionX
         override fun getPositionY() = positionY
-        override fun getXPivot() = view.width / 2f
-        override fun getYPivot() = markerPointer.bottom.toFloat()
+        override fun getPivotX() = view.width / 2f
+        override fun getPivotY() = markerPointer.bottom.toFloat()
 
         override fun onVisibilityRateChanged(rate: Float) {
             when {
