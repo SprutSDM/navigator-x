@@ -24,4 +24,9 @@ sealed class MapState(
         override val selectedBuilding: Building,
         val roomNumber: String
     ) : MapState(buildings, selectedBuilding)
+
+    data class RoomPicking(
+        override val buildings: List<Building>,
+        override val selectedBuilding: Building
+    ) : MapState(buildings, selectedBuilding)
 }

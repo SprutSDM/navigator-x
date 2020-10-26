@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:minWidth="28dp"
         android:textColor="@android:color/black"
-        android:background="@drawable/marker_shape"
+        android:background="@drawable/shape_marker"
         android:textStyle="bold"
         android:layout_gravity="center"/>
     <ImageView

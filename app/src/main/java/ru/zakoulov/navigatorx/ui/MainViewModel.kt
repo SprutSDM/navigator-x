@@ -26,7 +26,28 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun pickHereRoom() {
+        val currentState = state.value
+        if (currentState is State.Map) {
+            transformToRoomPickState(currentState)
+        }
+    }
+
+    fun pickFromHereRoom() {
+        val currentState = state.value
+        if (currentState is State.Map) {
+            transformToRoomPickState(currentState)
+        }
+    }
+
     fun onRoomInfoBSClosed() {
+        val currentState = state.value
+        if (currentState is State.Map && currentState.mapState !is MapState.Viewing) {
+            transformToViewingState(currentState)
+        }
+    }
+
+    fun onRoomPickerBSClosed() {
         val currentState = state.value
         if (currentState is State.Map && currentState.mapState !is MapState.Viewing) {
             transformToViewingState(currentState)
@@ -53,6 +74,13 @@ class MainViewModel : ViewModel() {
 
     private fun transformToViewingState(currentState: State.Map) {
         _state.value = currentState.copy(mapState = MapState.Viewing(
+            buildings = currentState.mapState.buildings,
+            selectedBuilding = currentState.mapState.selectedBuilding
+        ))
+    }
+
+    private fun transformToRoomPickState(currentState: State.Map) {
+        _state.value = currentState.copy(mapState = MapState.RoomPicking(
             buildings = currentState.mapState.buildings,
             selectedBuilding = currentState.mapState.selectedBuilding
         ))

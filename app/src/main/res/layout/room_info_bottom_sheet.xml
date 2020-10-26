@@ -10,43 +10,49 @@
     app:behavior_hideable="true"
     app:behavior_peekHeight="112dp">
 
-    <ImageView
-        android:id="@+id/room_image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/shape_room"
-        android:padding="8dp"
-        android:src="@drawable/ic_building"
+    <include layout="@layout/element_room"
+        android:id="@+id/room_layout"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/room_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:layout_marginStart="8dp"
-        android:text="Кафедра высшей математики"
-        android:textColor="@android:color/darker_gray"
-        app:layout_constraintStart_toEndOf="@id/room_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/room_image"/>
+<!--    <ImageView-->
+<!--        android:id="@+id/room_image"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:background="@drawable/shape_room"-->
+<!--        android:padding="8dp"-->
+<!--        android:src="@drawable/ic_building"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <TextView
-        android:id="@+id/room_number"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:layout_marginStart="8dp"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:text="Ауд. 2251"
-        android:textColor="@android:color/black"
-        app:layout_constraintStart_toEndOf="@id/room_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/room_image"/>
+<!--    <TextView-->
+<!--        android:id="@+id/room_title"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:maxLines="1"-->
+<!--        android:ellipsize="end"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:text="Кафедра высшей математики"-->
+<!--        android:textColor="@android:color/darker_gray"-->
+<!--        app:layout_constraintStart_toEndOf="@id/room_image"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@id/room_image"/>-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/room_number"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:maxLines="1"-->
+<!--        android:ellipsize="end"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textSize="16sp"-->
+<!--        android:text="Ауд. 2251"-->
+<!--        android:textColor="@android:color/black"-->
+<!--        app:layout_constraintStart_toEndOf="@id/room_image"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/room_image"/>-->
 
     <FrameLayout
         android:id="@+id/button_here"
@@ -59,7 +65,7 @@
         android:layout_marginEnd="4dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintTop_toBottomOf="@id/room_image"
+        app:layout_constraintTop_toBottomOf="@id/room_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button_from_here">
         <LinearLayout
@@ -93,7 +99,7 @@
         android:layout_marginStart="4dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintTop_toBottomOf="@id/room_image"
+        app:layout_constraintTop_toBottomOf="@id/room_layout"
         app:layout_constraintStart_toEndOf="@id/button_here"
         app:layout_constraintEnd_toEndOf="parent">
         <LinearLayout
@@ -112,7 +118,7 @@
                 android:textColor="@android:color/white"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:text="@string/from_here"
+                android:text="@string/button_from_here"
                 android:paddingStart="4dp"/>
         </LinearLayout>
     </FrameLayout>
@@ -125,7 +131,7 @@
         android:layout_marginTop="16dp"
         android:showDividers="middle"
         android:divider="@drawable/space_room_place_info"
-        app:layout_constraintTop_toBottomOf="@id/button_from_here"
+        app:layout_constraintTop_toBottomOf="@id/button_here"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <include layout="@layout/element_room_place_info"/>

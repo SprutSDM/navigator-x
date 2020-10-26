@@ -68,5 +68,7 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/navigation_bottom_sheet" />
     <include layout="@layout/room_info_bottom_sheet" />
+    <include layout="@layout/room_picker_bottom_sheet" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

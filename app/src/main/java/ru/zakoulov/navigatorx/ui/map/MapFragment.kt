@@ -10,11 +10,17 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.otaliastudios.zoom.ZoomMapAdapter
 import com.otaliastudios.zoom.ZoomMapViewHolder
+import kotlinx.android.synthetic.main.element_room.room_number
 import kotlinx.android.synthetic.main.fragment_map.building_title
 import kotlinx.android.synthetic.main.fragment_map.toolbar
 import kotlinx.android.synthetic.main.fragment_map.zoom_layout
+import kotlinx.android.synthetic.main.navigation_bottom_sheet.bottom_sheet_navigation
+import kotlinx.android.synthetic.main.navigation_bottom_sheet.input_room_from_here
+import kotlinx.android.synthetic.main.navigation_bottom_sheet.input_room_here
 import kotlinx.android.synthetic.main.room_info_bottom_sheet.bottom_sheet_room_info
-import kotlinx.android.synthetic.main.room_info_bottom_sheet.room_number
+import kotlinx.android.synthetic.main.room_info_bottom_sheet.button_from_here
+import kotlinx.android.synthetic.main.room_info_bottom_sheet.button_here
+import kotlinx.android.synthetic.main.room_picker_bottom_sheet.bottom_sheet_room_picker_info
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.R
@@ -31,7 +37,9 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
 
     private val viewModel: MainViewModel by activityViewModels()
 
+    private lateinit var navigationBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var roomInfoBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var roomPickerBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     private val rawMarkers = List(200) {
         RawMarkerData(
@@ -51,7 +59,11 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         markerAdapter = MarkerAdapter(map.markers, this)
         zoom_layout.adapter = markerAdapter as ZoomMapAdapter<ZoomMapViewHolder>
         roomInfoBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_room_info)
+        navigationBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_navigation)
+        roomPickerBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_room_picker_info)
         bottom_sheet_room_info.setOnClickListener {  }
+        bottom_sheet_navigation.setOnClickListener {  }
+        bottom_sheet_room_picker_info.setOnClickListener {  }
         zoom_layout.setOnOutsideClickListener {
             Log.d(TAG, "onViewCreated: outsideclick")
             viewModel.onOutsideClick()
@@ -67,14 +79,28 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                     is State.Map -> {
                         when (val mapState = it.mapState) {
                             is MapState.Viewing -> {
-                                building_title.text = mapState.selectedBuilding.title
+                                if (navigationBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
+                                    navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                                    navigationBottomSheetBehavior.isHideable = false
+                                }
                                 roomInfoBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                                roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                                building_title.text = mapState.selectedBuilding.title
                             }
                             is MapState.RoomSelected -> {
-                                room_number.text = "Ауд. ${mapState.roomNumber}"
+                                navigationBottomSheetBehavior.isHideable = true
+                                navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                                roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 if (roomInfoBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                                     roomInfoBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                                 }
+                                room_number.text = "Ауд. ${mapState.roomNumber}"
+                            }
+                            is MapState.RoomPicking -> {
+                                navigationBottomSheetBehavior.isHideable = true
+                                navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                                roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                                roomInfoBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                             }
                         }
                     }
@@ -90,6 +116,22 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
         })
+        roomPickerBottomSheetBehavior.addBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    viewModel.onRoomPickerBSClosed()
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
+        })
+
+        input_room_here.setOnClickListener {
+            viewModel.pickHereRoom()
+        }
+        input_room_from_here.setOnClickListener {
+            viewModel.pickFromHereRoom()
+        }
 
         toolbar.setOnClickListener {
             val buildingPicker = BuildingPickerFragment()

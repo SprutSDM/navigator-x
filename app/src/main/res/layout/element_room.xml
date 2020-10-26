@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/room_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/shape_room"
+        android:padding="8dp"
+        android:src="@drawable/ic_building"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/room_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginStart="8dp"
+        android:text="Кафедра высшей математики"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toEndOf="@id/room_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/room_image"/>
+
+    <TextView
+        android:id="@+id/room_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginStart="8dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:text="Ауд. 2251"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toEndOf="@id/room_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/room_image"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
