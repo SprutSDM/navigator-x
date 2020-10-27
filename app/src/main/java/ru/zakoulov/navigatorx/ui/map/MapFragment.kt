@@ -60,7 +60,9 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         zoom_layout.adapter = markerAdapter as ZoomMapAdapter<ZoomMapViewHolder>
         roomInfoBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_room_info)
         navigationBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_navigation)
-        roomPickerBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_room_picker_info)
+        roomPickerBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_room_picker_info).apply {
+            skipCollapsed = true
+        }
         bottom_sheet_room_info.setOnClickListener {  }
         bottom_sheet_navigation.setOnClickListener {  }
         bottom_sheet_room_picker_info.setOnClickListener {  }
@@ -116,8 +118,9 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
         })
-        roomPickerBottomSheetBehavior.addBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
+        roomPickerBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                Log.d(TAG, "onStateChanged: newState ${newState}")
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     viewModel.onRoomPickerBSClosed()
                 }
