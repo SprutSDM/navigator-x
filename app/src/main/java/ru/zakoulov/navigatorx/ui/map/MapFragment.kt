@@ -106,12 +106,6 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                                 navigationBottomSheetBehavior.isHideable = true
                                 navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-//                                view.postDelayed({
-//                                    roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-//                                }, 10)
-                                roomInfoBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-//                                view.postDelayed({ showKeyboardFor(input_room) }, 100)
                                 showKeyboardFor(input_room)
                             }
                         }
@@ -131,7 +125,6 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         roomPickerBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             @SuppressLint("SwitchIntDef")
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                Log.d(TAG, "onStateChanged: newState ${newState}")
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> viewModel.onRoomPickerBSClosed()
                     BottomSheetBehavior.STATE_DRAGGING -> hideKeyboard()
