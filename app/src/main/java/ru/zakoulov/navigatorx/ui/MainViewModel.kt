@@ -98,7 +98,6 @@ class MainViewModel : ViewModel() {
     }
 
     private fun transformToRoomPickState(currentState: State.Map) {
-        _state.value
         _state.value = currentState.copy(mapState = MapState.RoomPicking(
             buildings = currentState.mapState.buildings,
             selectedBuilding = currentState.mapState.selectedBuilding

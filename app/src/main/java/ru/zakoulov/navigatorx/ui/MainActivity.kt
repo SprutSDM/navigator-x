@@ -1,7 +1,6 @@
 package ru.zakoulov.navigatorx.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -18,11 +17,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, MapFragment.instance)
+            .replace(R.id.container, MapFragment())
             .commit()
         lifecycleScope.launch {
             mainViewModel.events.collect {
-                Log.d(TAG, "onCreate collected: ${it}")
                 when (it) {
                     is Event.NavigateBack -> finish()
                 }

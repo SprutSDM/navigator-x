@@ -156,7 +156,5 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
 
         private const val IMAGE_WIDTH = 4086
         private const val IMAGE_HEIGHT = 4086
-
-        val instance: MapFragment by lazy { MapFragment() }
     }
 }
