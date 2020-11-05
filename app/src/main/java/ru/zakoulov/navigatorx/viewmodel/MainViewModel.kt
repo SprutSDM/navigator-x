@@ -1,19 +1,21 @@
-package ru.zakoulov.navigatorx.ui
+package ru.zakoulov.navigatorx.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.zakoulov.navigatorx.data.Building
-import ru.zakoulov.navigatorx.state.Event
-import ru.zakoulov.navigatorx.state.MapState
-import ru.zakoulov.navigatorx.state.State
+import ru.zakoulov.navigatorx.data.RealmRepository
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    private val realmRepository: RealmRepository
+) : ViewModel() {
 
-    private val _state: MutableStateFlow<State> = MutableStateFlow(State.Map(
+    private val _state: MutableStateFlow<State> = MutableStateFlow(
+        State.Map(
         mapState = MapState.Viewing(buildings = buildings, selectedBuilding = buildings[0])
     ))
     val state: StateFlow<State> = _state

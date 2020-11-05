@@ -7,11 +7,16 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.R
-import ru.zakoulov.navigatorx.state.Event
+import ru.zakoulov.navigatorx.getApp
+import ru.zakoulov.navigatorx.viewmodel.Event
 import ru.zakoulov.navigatorx.ui.map.MapFragment
+import ru.zakoulov.navigatorx.viewmodel.MainViewModel
+import ru.zakoulov.navigatorx.viewmodel.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels {
+        MainViewModelFactory.getInstance(getApp().realmRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

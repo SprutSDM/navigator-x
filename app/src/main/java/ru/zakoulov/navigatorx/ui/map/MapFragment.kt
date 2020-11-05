@@ -19,8 +19,6 @@ import kotlinx.android.synthetic.main.navigation_bottom_sheet.bottom_sheet_navig
 import kotlinx.android.synthetic.main.navigation_bottom_sheet.input_room_from_here
 import kotlinx.android.synthetic.main.navigation_bottom_sheet.input_room_here
 import kotlinx.android.synthetic.main.room_info_bottom_sheet.bottom_sheet_room_info
-import kotlinx.android.synthetic.main.room_info_bottom_sheet.button_from_here
-import kotlinx.android.synthetic.main.room_info_bottom_sheet.button_here
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.bottom_sheet_room_picker_info
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.input_room
 import kotlinx.coroutines.flow.collect
@@ -29,9 +27,9 @@ import ru.zakoulov.navigatorx.R
 import ru.zakoulov.navigatorx.map.Map
 import ru.zakoulov.navigatorx.map.Marker
 import ru.zakoulov.navigatorx.map.RawMarkerData
-import ru.zakoulov.navigatorx.state.MapState
-import ru.zakoulov.navigatorx.state.State
-import ru.zakoulov.navigatorx.ui.MainViewModel
+import ru.zakoulov.navigatorx.viewmodel.MapState
+import ru.zakoulov.navigatorx.viewmodel.State
+import ru.zakoulov.navigatorx.viewmodel.MainViewModel
 import ru.zakoulov.navigatorx.ui.buildingpicker.BuildingPickerFragment
 import ru.zakoulov.navigatorx.ui.hideKeyboard
 import ru.zakoulov.navigatorx.ui.showKeyboardFor

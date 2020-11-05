@@ -1,4 +1,4 @@
-package ru.zakoulov.navigatorx.state
+package ru.zakoulov.navigatorx.viewmodel
 
 import ru.zakoulov.navigatorx.data.Building
 

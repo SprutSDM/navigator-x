@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.R
 import ru.zakoulov.navigatorx.data.Building
-import ru.zakoulov.navigatorx.state.State
-import ru.zakoulov.navigatorx.ui.MainViewModel
+import ru.zakoulov.navigatorx.viewmodel.State
+import ru.zakoulov.navigatorx.viewmodel.MainViewModel
 
 class BuildingPickerFragment : BottomSheetDialogFragment(), BuildingPickerCallbacks {
 

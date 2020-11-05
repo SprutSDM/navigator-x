@@ -7,4 +7,6 @@
     <string name="from_here">Отсюда</string>
     <string name="cancel">Отменить</string>
     <string name="where">Куда</string>
+
+    <string name="realm_app_id">navigator-unscj</string>
 </resources>
