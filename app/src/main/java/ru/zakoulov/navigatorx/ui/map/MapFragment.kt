@@ -45,22 +45,22 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
     private lateinit var roomPickerBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var roomPickerRoomInfo: TextView
 
-    private val rawMarkers = List(200) {
-        RawMarkerData(
-            id = it,
-            x = Random.nextInt(IMAGE_WIDTH),
-            y = Random.nextInt(IMAGE_HEIGHT),
-            label = Random.nextInt(100, 10000).toString()
-        )
-    }
-
-    private val map = Map(rawMarkers)
+//    private val rawMarkers = List(200) {
+//        RawMarkerData(
+//            id = it,
+//            x = Random.nextInt(IMAGE_WIDTH),
+//            y = Random.nextInt(IMAGE_HEIGHT),
+//            label = Random.nextInt(100, 10000).toString()
+//        )
+//    }
+//
+//    private val map = Map(rawMarkers)
 
     lateinit var markerAdapter: MarkerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        markerAdapter = MarkerAdapter(map.markers, this)
+        markerAdapter = MarkerAdapter(emptyList(), this)
         zoom_layout.adapter = markerAdapter as ZoomMapAdapter<ZoomMapViewHolder>
         roomInfoBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_room_info)
         navigationBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_navigation)
@@ -84,6 +84,9 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
 
                     }
                     is State.Map -> {
+                        markerAdapter.data = it.mapState.mapData.markers
+                        Log.d(TAG, "onViewCreated, markerData: ${markerAdapter.data[0].positionX}")
+                        Log.d(TAG, "onViewCreated, markerData: ${markerAdapter.data[0].positionY}")
                         when (val mapState = it.mapState) {
                             is MapState.Viewing -> {
                                 if (navigationBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {

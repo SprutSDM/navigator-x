@@ -5,12 +5,16 @@ import android.app.Application
 import io.realm.Realm
 import io.realm.log.LogLevel
 import io.realm.log.RealmLog
+import ru.zakoulov.navigatorx.data.realm.RealmMapper
 import ru.zakoulov.navigatorx.data.realm.RealmRepository
 
 class App : Application() {
 
     val realmRepository: RealmRepository by lazy {
-        RealmRepository(getString(R.string.realm_app_id))
+        RealmRepository(
+            realmAppId = getString(R.string.realm_app_id),
+            realmMapper = RealmMapper()
+        )
     }
 
     override fun onCreate() {

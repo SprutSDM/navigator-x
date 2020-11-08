@@ -2,31 +2,69 @@ package ru.zakoulov.navigatorx.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.data.Building
+import ru.zakoulov.navigatorx.data.MapData
 import ru.zakoulov.navigatorx.data.realm.RealmRepository
 
 class MainViewModel(
-    private val realmRepository: RealmRepository
+    realmRepository: RealmRepository
 ) : ViewModel() {
+
+    init {
+        observeMapData(realmRepository.mapData)
+    }
 
     private val _state: MutableStateFlow<State> = MutableStateFlow(
         State.Map(
-        mapState = MapState.Viewing(buildings = buildings, selectedBuilding = buildings[0])
+        mapState = MapState.Viewing(
+            buildings = buildings,
+            mapData = realmRepository.mapData.value,
+            selectedBuilding = buildings[0])
     ))
     val state: StateFlow<State> = _state
 
     private val _events: MutableSharedFlow<Event> = MutableSharedFlow(extraBufferCapacity = 1)
     val events: SharedFlow<Event> = _events
 
+    private fun observeMapData(mapData: StateFlow<MapData>) {
+        viewModelScope.launch {
+            mapData.collect { mapData ->
+                Log.d(TAG, "observeMapData: ${mapData.markers.size}")
+                _state.value = when (val currentState = state.value) {
+                    is State.Loading -> {
+                        State.Map(
+                            mapState = MapState.Viewing(
+                                buildings = buildings,
+                                mapData = mapData,
+                                selectedBuilding = buildings[0]
+                            )
+                        )
+                    }
+                    is State.Map -> {
+                        currentState.copy(mapState = MapState.Viewing(
+                            buildings = currentState.mapState.buildings,
+                            mapData = mapData,
+                            selectedBuilding = currentState.mapState.selectedBuilding
+                        ))
+                    }
+                }
+            }
+        }
+    }
+
     fun selectBuilding(building: Building) {
         when (val currentState = state.value) {
             is State.Map -> {
                 _state.value = currentState.copy(mapState = MapState.Viewing(
                     buildings = currentState.mapState.buildings,
+                    mapData = currentState.mapState.mapData,
                     selectedBuilding = building
                 ))
             }
@@ -66,6 +104,7 @@ class MainViewModel(
         if (currentState is State.Map) {
             _state.value = currentState.copy(mapState = MapState.RoomSelected(
                 buildings = currentState.mapState.buildings,
+                mapData = currentState.mapState.mapData,
                 selectedBuilding = currentState.mapState.selectedBuilding,
                 roomNumber = roomNumber
             ))
@@ -94,6 +133,7 @@ class MainViewModel(
     private fun transformToViewingState(currentState: State.Map) {
         _state.value = currentState.copy(mapState = MapState.Viewing(
             buildings = currentState.mapState.buildings,
+            mapData = currentState.mapState.mapData,
             selectedBuilding = currentState.mapState.selectedBuilding
         ))
     }
@@ -101,6 +141,7 @@ class MainViewModel(
     private fun transformToRoomPickState(currentState: State.Map) {
         _state.value = currentState.copy(mapState = MapState.RoomPicking(
             buildings = currentState.mapState.buildings,
+            mapData = currentState.mapState.mapData,
             selectedBuilding = currentState.mapState.selectedBuilding
         ))
     }

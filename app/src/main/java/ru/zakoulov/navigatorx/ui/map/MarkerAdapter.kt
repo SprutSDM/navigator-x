@@ -1,5 +1,6 @@
 package ru.zakoulov.navigatorx.ui.map
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +12,18 @@ import ru.zakoulov.navigatorx.R
 import ru.zakoulov.navigatorx.data.Marker
 
 class MarkerAdapter(
-    private val data: List<Marker>,
+    data: List<Marker>,
     private val callbacks: MarkerCallbacks
 ) : ZoomMapAdapter<MarkerAdapter.MarkerViewHolder>() {
+
+    var data = data
+        set(value) {
+            Log.d(TAG, "value size: ${value.size}")
+            field = value
+            Log.d(TAG, "DataSetChanged: ")
+            notifyDataSetChanged()
+        }
+
     override fun createViewHolder(parent: ViewGroup, type: Int): MarkerViewHolder {
         fun inflateView(@LayoutRes layoutResId: Int): View {
             return LayoutInflater.from(parent.context).inflate(layoutResId, parent, false)
