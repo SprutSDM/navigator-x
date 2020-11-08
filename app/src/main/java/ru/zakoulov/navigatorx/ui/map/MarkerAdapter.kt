@@ -13,12 +13,12 @@ class MarkerAdapter(
     private val data: List<Marker>,
     private val callbacks: MarkerCallbacks
 ) : ZoomMapAdapter<MarkerAdapter.MarkerViewHolder>() {
-    override fun createViewHolder(parent: ViewGroup): MarkerViewHolder {
+    override fun createViewHolder(parent: ViewGroup, type: Int): MarkerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.marker, parent, false)
         return MarkerViewHolder(view, callbacks)
     }
 
-    override fun bindViewHolder(viewHolder: MarkerViewHolder, position: Int) {
+    override fun bindViewHolder(viewHolder: MarkerViewHolder, position: Int, type: Int) {
         val marker = data[position]
         viewHolder.setupViewHolder(marker)
     }
