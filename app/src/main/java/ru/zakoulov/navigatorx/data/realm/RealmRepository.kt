@@ -1,4 +1,4 @@
-package ru.zakoulov.navigatorx.data
+package ru.zakoulov.navigatorx.data.realm
 
 import android.util.Log
 import io.realm.Realm
@@ -8,8 +8,6 @@ import io.realm.mongodb.AppConfiguration
 import io.realm.mongodb.Credentials
 import io.realm.mongodb.User
 import io.realm.mongodb.sync.SyncConfiguration
-import ru.zakoulov.navigatorx.data.realm.MapPointModel
-
 
 class RealmRepository(
     realmAppId: String

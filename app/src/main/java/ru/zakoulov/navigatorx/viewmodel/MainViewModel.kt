@@ -2,13 +2,12 @@ package ru.zakoulov.navigatorx.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.zakoulov.navigatorx.data.Building
-import ru.zakoulov.navigatorx.data.RealmRepository
+import ru.zakoulov.navigatorx.data.realm.RealmRepository
 
 class MainViewModel(
     private val realmRepository: RealmRepository

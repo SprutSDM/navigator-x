@@ -2,7 +2,7 @@ package ru.zakoulov.navigatorx.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import ru.zakoulov.navigatorx.data.RealmRepository
+import ru.zakoulov.navigatorx.data.realm.RealmRepository
 
 class MainViewModelFactory (
     private val realmRepository: RealmRepository

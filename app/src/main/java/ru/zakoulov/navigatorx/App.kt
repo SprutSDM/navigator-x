@@ -5,7 +5,7 @@ import android.app.Application
 import io.realm.Realm
 import io.realm.log.LogLevel
 import io.realm.log.RealmLog
-import ru.zakoulov.navigatorx.data.RealmRepository
+import ru.zakoulov.navigatorx.data.realm.RealmRepository
 
 class App : Application() {
 

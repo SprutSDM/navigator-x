@@ -4,18 +4,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import com.otaliastudios.zoom.ZoomMapAdapter
 import com.otaliastudios.zoom.ZoomMapViewHolder
 import ru.zakoulov.navigatorx.R
-import ru.zakoulov.navigatorx.map.Marker
+import ru.zakoulov.navigatorx.data.Marker
 
 class MarkerAdapter(
     private val data: List<Marker>,
     private val callbacks: MarkerCallbacks
 ) : ZoomMapAdapter<MarkerAdapter.MarkerViewHolder>() {
     override fun createViewHolder(parent: ViewGroup, type: Int): MarkerViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.marker, parent, false)
-        return MarkerViewHolder(view, callbacks)
+        fun inflateView(@LayoutRes layoutResId: Int): View {
+            return LayoutInflater.from(parent.context).inflate(layoutResId, parent, false)
+        }
+
+        return when (type) {
+            ROOM_TYPE -> MarkerViewHolder.Room(inflateView(R.layout.marker_room), callbacks)
+            else -> MarkerViewHolder.Room(inflateView(R.layout.marker_room), callbacks)
+        }
     }
 
     override fun bindViewHolder(viewHolder: MarkerViewHolder, position: Int, type: Int) {
@@ -23,24 +30,25 @@ class MarkerAdapter(
         viewHolder.setupViewHolder(marker)
     }
 
+    override fun getTypeFor(position: Int): Int {
+        return when (data[position]) {
+            is Marker.Room -> ROOM_TYPE
+            else -> ROOM_TYPE
+        }
+    }
+
     override fun getChildCount() = data.size
 
-    class MarkerViewHolder(view: View, private val callbacks: MarkerCallbacks) : ZoomMapViewHolder(view) {
-        private var id: Int = 0
+    sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbacks) : ZoomMapViewHolder(view) {
         private var positionX: Float = 0f
         private var positionY: Float = 0f
         private var visibilityRate: Float = 0f
-        private var markerPointer: View = view.findViewById(R.id.marker_pointer)
         private var isVisible: Boolean = false
 
-        private var label: TextView = view.findViewById(R.id.marker_text)
-
-        fun setupViewHolder(markerData: Marker) {
-            positionX = markerData.x.toFloat()
-            positionY = markerData.y.toFloat()
-            visibilityRate = markerData.depthRate
-            label.text = markerData.label
-            id = markerData.id
+        open fun setupViewHolder(markerData: Marker) {
+            positionX = markerData.positionX
+            positionY = markerData.positionY
+            visibilityRate = markerData.scaleVisible
             view.visibility = View.INVISIBLE
             view.setOnClickListener {
                 callbacks.onMarkerSelected(markerData)
@@ -49,8 +57,6 @@ class MarkerAdapter(
 
         override fun getPositionX() = positionX
         override fun getPositionY() = positionY
-        override fun getPivotX() = view.width / 2f
-        override fun getPivotY() = markerPointer.bottom.toFloat()
 
         override fun onVisibilityRateChanged(rate: Float) {
             when {
@@ -87,11 +93,28 @@ class MarkerAdapter(
             }
             isVisible = false
         }
+
+        class Room(view: View, callbacks: MarkerCallbacks) : MarkerViewHolder(view, callbacks) {
+            private var markerPointer: View = view.findViewById(R.id.marker_pointer)
+            private var roomNumber: TextView = view.findViewById(R.id.room_number)
+
+            override fun getPivotX() = view.width / 2f
+            override fun getPivotY() = markerPointer.bottom.toFloat()
+
+            override fun setupViewHolder(markerData: Marker) {
+                super.setupViewHolder(markerData)
+                (markerData as? Marker.Room)?.let {
+                    roomNumber.text = markerData.roomNumber
+                }
+            }
+        }
     }
 
     companion object {
         private const val TAG = "MarkerAdapter"
         private const val ANIMATION_TIME = 200L
         private const val DEPTH_SHIFT = 0.035f
+
+        private const val ROOM_TYPE = 0
     }
 }

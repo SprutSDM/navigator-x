@@ -1,6 +1,6 @@
 package ru.zakoulov.navigatorx.map
 
-class Marker(
+class MapMarker(
     id: Int,
     parentId: Int,
     x: Int,

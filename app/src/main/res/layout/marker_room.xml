@@ -9,7 +9,7 @@
     android:paddingBottom="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <TextView
-        android:id="@+id/marker_text"
+        android:id="@+id/room_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="28dp"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:src="@drawable/marker_pointer"
-        app:layout_constraintTop_toBottomOf="@id/marker_text"
+        app:layout_constraintTop_toBottomOf="@id/room_number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

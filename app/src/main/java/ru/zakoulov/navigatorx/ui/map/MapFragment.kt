@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -24,8 +25,8 @@ import kotlinx.android.synthetic.main.room_picker_bottom_sheet.input_room
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.R
+import ru.zakoulov.navigatorx.data.Marker
 import ru.zakoulov.navigatorx.map.Map
-import ru.zakoulov.navigatorx.map.Marker
 import ru.zakoulov.navigatorx.map.RawMarkerData
 import ru.zakoulov.navigatorx.viewmodel.MapState
 import ru.zakoulov.navigatorx.viewmodel.State
@@ -42,6 +43,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
     private lateinit var navigationBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var roomInfoBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var roomPickerBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var roomPickerRoomInfo: TextView
 
     private val rawMarkers = List(200) {
         RawMarkerData(
@@ -72,6 +74,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
             Log.d(TAG, "onViewCreated: outsideclick")
             viewModel.onOutsideClick()
         }
+        roomPickerRoomInfo = bottom_sheet_room_info.findViewById(R.id.room_number)
 
         lifecycleScope.launch {
             viewModel.state.collect {
@@ -98,7 +101,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                                 if (roomInfoBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                                     roomInfoBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                                 }
-                                room_number.text = "Ауд. ${mapState.roomNumber}"
+                                roomPickerRoomInfo.text = "Ауд. ${mapState.roomNumber}"
                             }
                             is MapState.RoomPicking -> {
                                 navigationBottomSheetBehavior.isHideable = true
@@ -146,7 +149,9 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
     }
 
     override fun onMarkerSelected(marker: Marker) {
-        viewModel.onRoomSelected(marker.label)
+        when (marker) {
+            is Marker.Room -> viewModel.onRoomSelected(marker.roomNumber)
+        }
     }
 
     companion object {

@@ -1,6 +1,8 @@
 package ru.zakoulov.navigatorx.map
 
 import android.util.Log
+import ru.zakoulov.navigatorx.data.Building
+import ru.zakoulov.navigatorx.data.Marker
 
 class Map(rawMarkers: List<RawMarkerData>) {
     private val mapUnifier = MapUnifier()
@@ -11,13 +13,15 @@ class Map(rawMarkers: List<RawMarkerData>) {
         }
     }
     val markers = unifiedDots.map { unifiedMapDot ->
-        Marker(
-            id = unifiedMapDot.id,
-            parentId = unifiedMapDot.parentId,
-            x = unifiedMapDot.x,
-            y = unifiedMapDot.y,
-            visibilityRate = unifiedMapDot.depthRate,
-            label = rawMarkers[unifiedMapDot.id].label
+        Marker.Room(
+            positionX = unifiedMapDot.x.toFloat(),
+            positionY = unifiedMapDot.y.toFloat(),
+            building = Building(id = 0, title = "123", address = "qq"),
+            scaleVisible = unifiedMapDot.depthRate,
+            corpus = 0,
+            floor = 0,
+            roomNumber = rawMarkers[unifiedMapDot.id].label,
+            roomTitle = "Аудитория ${rawMarkers[unifiedMapDot.id].label}"
         )
     }
 
