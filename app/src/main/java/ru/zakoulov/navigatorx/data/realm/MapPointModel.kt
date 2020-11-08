@@ -26,8 +26,8 @@ open class MapPointModel(
     var building: Int = 0,
     var floor: Int = 0,
     var korpus: Int = 0,
-    private var positionX: Double = 0.0,
-    private var positionY: Double = 0.0
+    var positionX: Double = 0.0,
+    var positionY: Double = 0.0
 ) : RealmObject() {
     @PrimaryKey
     var _id: ObjectId = ObjectId()
