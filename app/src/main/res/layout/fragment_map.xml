@@ -79,6 +79,51 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/shape_floor_picker"
+        android:layout_margin="8dp"
+        android:elevation="12dp"
+        android:layout_gravity="top"
+        app:layout_anchor="@id/bottom_sheet_navigation"
+        app:layout_anchorGravity="end|top">
+        <ImageView
+            android:id="@+id/top_floor_arrow"
+            android:layout_width="40dp"
+            android:paddingTop="6dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_triangle"/>
+        <TextView
+            android:id="@+id/floor_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:layout_gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"/>
+        <ImageView
+            android:id="@+id/bottom_floor_arrow"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center"
+            android:rotation="180"
+            android:paddingTop="6dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:src="@drawable/ic_triangle" />
+    </LinearLayout>
+
     <include layout="@layout/navigation_bottom_sheet" />
     <include layout="@layout/room_info_bottom_sheet" />
     <include layout="@layout/room_picker_bottom_sheet" />

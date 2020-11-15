@@ -5,4 +5,7 @@
     <dimen name="markerPaddingBottom">2dp</dimen>
     <dimen name="markerPaddingLeft">8dp</dimen>
     <dimen name="markerPaddingRight">8dp</dimen>
+
+    <dimen name="floorPickerRadius">8dp</dimen>
+
 </resources>
