@@ -1,11 +1,10 @@
 package ru.zakoulov.navigatorx.data.realm
 
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
 import org.bson.types.ObjectId
-import org.jetbrains.annotations.NotNull
-import java.lang.IllegalArgumentException
 
 enum class PointTypeEnum(val id: Int) {
     PATH(0),
@@ -27,7 +26,8 @@ open class MapPointModel(
     var floor: Int = 0,
     var korpus: Int = 0,
     var positionX: Double = 0.0,
-    var positionY: Double = 0.0
+    var positionY: Double = 0.0,
+    @Required var connectedIDs: RealmList<String> = RealmList()
 ) : RealmObject() {
     @PrimaryKey
     var _id: ObjectId = ObjectId()

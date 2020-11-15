@@ -87,18 +87,26 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                     is State.Map -> {
                         markerAdapter.data = it.mapState.mapData.markers
                         floor_number.text = it.mapState.floor.toString()
-                        up_floor_arrow.setColorFilter(ContextCompat.getColor(requireContext(),
-                            if (it.mapState.floor == it.mapState.selectedBuilding.floors) {
-                                android.R.color.darker_gray
-                            } else {
-                                android.R.color.black
-                            }))
-                        down_floor_arrow.setColorFilter(ContextCompat.getColor(requireContext(),
-                            if (it.mapState.floor == 1) {
-                                android.R.color.darker_gray
-                            } else {
-                                android.R.color.black
-                            }))
+                        up_floor_arrow.setColorFilter(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                if (it.mapState.floor == it.mapState.selectedBuilding.floors) {
+                                    android.R.color.darker_gray
+                                } else {
+                                    android.R.color.black
+                                }
+                            )
+                        )
+                        down_floor_arrow.setColorFilter(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                if (it.mapState.floor == 1) {
+                                    android.R.color.darker_gray
+                                } else {
+                                    android.R.color.black
+                                }
+                            )
+                        )
                         when (val mapState = it.mapState) {
                             is MapState.Viewing -> {
                                 if (navigationBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {

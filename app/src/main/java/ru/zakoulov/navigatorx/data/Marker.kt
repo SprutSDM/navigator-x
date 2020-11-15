@@ -1,6 +1,7 @@
 package ru.zakoulov.navigatorx.data
 
 sealed class Marker(
+    val id: String,
     val scaleVisible: Float,
     val positionX: Float,
     val positionY: Float,
@@ -9,6 +10,7 @@ sealed class Marker(
     val corpus: Int
 ) {
     class Room(
+        id: String,
         scaleVisible: Float,
         positionX: Float,
         positionY: Float,
@@ -18,6 +20,7 @@ sealed class Marker(
         val roomNumber: String,
         val roomTitle: String
     ) : Marker(
+        id = id,
         scaleVisible = scaleVisible,
         positionX = positionX,
         positionY = positionY,
@@ -26,6 +29,7 @@ sealed class Marker(
         corpus = corpus
     )
     class Message(
+        id: String,
         scaleVisible: Float,
         positionX: Float,
         positionY: Float,
@@ -34,6 +38,7 @@ sealed class Marker(
         corpus: Int,
         val message: String
     ) : Marker(
+        id = id,
         scaleVisible = scaleVisible,
         positionX = positionX,
         positionY = positionY,
@@ -43,6 +48,7 @@ sealed class Marker(
     )
 
     class Icon(
+        id: String,
         scaleVisible: Float,
         positionX: Float,
         positionY: Float,
@@ -50,6 +56,7 @@ sealed class Marker(
         building: Building,
         corpus: Int
     ) : Marker(
+        id = id,
         scaleVisible = scaleVisible,
         positionX = positionX,
         positionY = positionY,
@@ -59,6 +66,7 @@ sealed class Marker(
     )
 
     class Stairs(
+        id: String,
         scaleVisible: Float,
         positionX: Float,
         positionY: Float,
@@ -67,6 +75,7 @@ sealed class Marker(
         corpus: Int,
         val isUp: Boolean
     ) : Marker(
+        id = id,
         scaleVisible = scaleVisible,
         positionX = positionX,
         positionY = positionY,
@@ -76,6 +85,7 @@ sealed class Marker(
     )
 
     class Elevator(
+        id: String,
         scaleVisible: Float,
         positionX: Float,
         positionY: Float,
@@ -83,6 +93,7 @@ sealed class Marker(
         building: Building,
         corpus: Int
     ) : Marker(
+        id = id,
         scaleVisible = scaleVisible,
         positionX = positionX,
         positionY = positionY,

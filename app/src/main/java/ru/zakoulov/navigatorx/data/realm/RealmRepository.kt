@@ -16,7 +16,7 @@ class RealmRepository(
     realmAppId: String,
     private val realmMapper: RealmMapper
 ) {
-    private val _mapData = MutableStateFlow(MapData(emptyList(), emptyList()))
+    private val _mapData = MutableStateFlow(MapData(emptyList(), emptyList(), emptyMap()))
     val mapData: StateFlow<MapData> = _mapData
 
     private val app = App(AppConfiguration.Builder(realmAppId).build())
