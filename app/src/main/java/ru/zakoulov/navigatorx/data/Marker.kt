@@ -58,29 +58,14 @@ sealed class Marker(
         corpus = corpus
     )
 
-    class StairsUp(
+    class Stairs(
         scaleVisible: Float,
         positionX: Float,
         positionY: Float,
         floor: Int,
         building: Building,
-        corpus: Int
-    ) : Marker(
-        scaleVisible = scaleVisible,
-        positionX = positionX,
-        positionY = positionY,
-        floor = floor,
-        building = building,
-        corpus = corpus
-    )
-
-    class StairsDown(
-        scaleVisible: Float,
-        positionX: Float,
-        positionY: Float,
-        floor: Int,
-        building: Building,
-        corpus: Int
+        corpus: Int,
+        val isUp: Boolean
     ) : Marker(
         scaleVisible = scaleVisible,
         positionX = positionX,
