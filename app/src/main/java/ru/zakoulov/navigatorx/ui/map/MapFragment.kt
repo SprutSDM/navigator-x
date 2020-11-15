@@ -63,7 +63,9 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         markerAdapter = MarkerAdapter(emptyList(), this)
         zoom_layout.adapter = markerAdapter as ZoomMapAdapter<ZoomMapViewHolder>
         roomInfoBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_room_info)
-        navigationBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_navigation)
+        navigationBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_navigation).apply {
+            isDraggable = false
+        }
         roomPickerBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_room_picker_info).apply {
             skipCollapsed = true
         }
@@ -91,14 +93,12 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                             is MapState.Viewing -> {
                                 if (navigationBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                                     navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                                    navigationBottomSheetBehavior.isHideable = false
                                 }
                                 roomInfoBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 building_title.text = mapState.selectedBuilding.title
                             }
                             is MapState.RoomSelected -> {
-                                navigationBottomSheetBehavior.isHideable = true
                                 navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 if (roomInfoBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
@@ -107,7 +107,6 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                                 roomPickerRoomInfo.text = "Ауд. ${mapState.roomNumber}"
                             }
                             is MapState.RoomPicking -> {
-                                navigationBottomSheetBehavior.isHideable = true
                                 navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                                 showKeyboardFor(input_room)

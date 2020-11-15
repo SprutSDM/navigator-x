@@ -18,6 +18,7 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
         positionY = markerData.positionY
         visibilityRate = markerData.scaleVisible
         view.visibility = View.INVISIBLE
+        isVisible = false
         view.setOnClickListener {
             callbacks.onMarkerSelected(markerData)
         }
