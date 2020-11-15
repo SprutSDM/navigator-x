@@ -73,8 +73,8 @@
             app:animationDuration="280"
             app:hasClickableChildren="false"
             app:background="@drawable/lomo1"
-            app:mapWidth="4086"
-            app:mapHeight="4086"
+            app:mapWidth="4096"
+            app:mapHeight="4096"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintBottom_toBottomOf="parent"/>
 

@@ -15,8 +15,8 @@ class RealmMapper {
                 PointTypeEnum.ROOM -> {
                     markers.add(Marker.Room(
                         scaleVisible = it.scaleVisible.toFloat(),
-                        positionX = it.positionX.toFloat() - 3500,
-                        positionY = it.positionY.toFloat() - 3500,
+                        positionX = it.positionX.toFloat(),
+                        positionY = it.positionY.toFloat(),
                         corpus = it.korpus,
                         building = Building(id = it.building, title = "", address = "", floors = 6),
                         floor = it.floor,
@@ -30,8 +30,8 @@ class RealmMapper {
                 PointTypeEnum.STAIRS_UP, PointTypeEnum.STAIRS_DOWN -> {
                     markers.add(Marker.Stairs(
                         scaleVisible = it.scaleVisible.toFloat(),
-                        positionX = it.positionX.toFloat() - 3500,
-                        positionY = it.positionY.toFloat() - 3500,
+                        positionX = it.positionX.toFloat(),
+                        positionY = it.positionY.toFloat(),
                         corpus = it.korpus,
                         building = Building(id = it.building, title = "", address = "", floors = 6),
                         floor = it.floor,

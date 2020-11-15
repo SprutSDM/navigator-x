@@ -14,18 +14,18 @@ import ru.zakoulov.navigatorx.data.MapData
 import ru.zakoulov.navigatorx.data.realm.RealmRepository
 
 class MainViewModel(
-    realmRepository: RealmRepository
+    private val realmRepository: RealmRepository
 ) : ViewModel() {
 
     init {
-        observeMapData(realmRepository.mapData)
+        observeMapData()
     }
 
     private val _state: MutableStateFlow<State> = MutableStateFlow(
         State.Map(
         mapState = MapState.Viewing(
             buildings = buildings,
-            mapData = realmRepository.mapData.value,
+            mapData = realmRepository.mapData.value.filterByFloor(1),
             selectedBuilding = buildings[0],
             floor = 1
         )
@@ -35,16 +35,16 @@ class MainViewModel(
     private val _events: MutableSharedFlow<Event> = MutableSharedFlow(extraBufferCapacity = 1)
     val events: SharedFlow<Event> = _events
 
-    private fun observeMapData(mapData: StateFlow<MapData>) {
+    private fun observeMapData() {
         viewModelScope.launch {
-            mapData.collect { mapData ->
+            realmRepository.mapData.collect { mapData ->
                 Log.d(TAG, "observeMapData: ${mapData.markers.size}")
                 _state.value = when (val currentState = state.value) {
                     is State.Loading -> {
                         State.Map(
                             mapState = MapState.Viewing(
                                 buildings = buildings,
-                                mapData = mapData,
+                                mapData = mapData.filterByFloor(1),
                                 selectedBuilding = buildings[0],
                                 floor = 1
                             )
@@ -53,7 +53,7 @@ class MainViewModel(
                     is State.Map -> {
                         currentState.copy(mapState = MapState.Viewing(
                             buildings = currentState.mapState.buildings,
-                            mapData = mapData,
+                            mapData = mapData.filterByFloor(1),
                             selectedBuilding = currentState.mapState.selectedBuilding,
                             floor = currentState.mapState.floor
                         ))
@@ -68,7 +68,7 @@ class MainViewModel(
             is State.Map -> {
                 _state.value = currentState.copy(mapState = MapState.Viewing(
                     buildings = currentState.mapState.buildings,
-                    mapData = currentState.mapState.mapData,
+                    mapData = realmRepository.mapData.value.filterByFloor(1),
                     selectedBuilding = building,
                     floor = 1
                 ))
@@ -143,7 +143,7 @@ class MainViewModel(
             if (currentFloor != currentState.mapState.selectedBuilding.floors) {
                 _state.value = currentState.copy(mapState = MapState.Viewing(
                     buildings = currentState.mapState.buildings,
-                    mapData = currentState.mapState.mapData,
+                    mapData = realmRepository.mapData.value.filterByFloor(currentState.mapState.floor + 1),
                     selectedBuilding = currentState.mapState.selectedBuilding,
                     floor = currentState.mapState.floor + 1
                 ))
@@ -158,7 +158,7 @@ class MainViewModel(
             if (currentFloor != 1) {
                 _state.value = currentState.copy(mapState = MapState.Viewing(
                     buildings = currentState.mapState.buildings,
-                    mapData = currentState.mapState.mapData,
+                    mapData = realmRepository.mapData.value.filterByFloor(currentState.mapState.floor - 1),
                     selectedBuilding = currentState.mapState.selectedBuilding,
                     floor = currentState.mapState.floor - 1
                 ))
