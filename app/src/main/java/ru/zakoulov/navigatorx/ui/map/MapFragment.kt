@@ -6,15 +6,18 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.otaliastudios.zoom.ZoomMapAdapter
 import com.otaliastudios.zoom.ZoomMapViewHolder
-import kotlinx.android.synthetic.main.element_room.room_number
 import kotlinx.android.synthetic.main.fragment_map.building_title
+import kotlinx.android.synthetic.main.fragment_map.down_floor_arrow
+import kotlinx.android.synthetic.main.fragment_map.floor_number
 import kotlinx.android.synthetic.main.fragment_map.toolbar
+import kotlinx.android.synthetic.main.fragment_map.up_floor_arrow
 import kotlinx.android.synthetic.main.fragment_map.zoom_layout
 import kotlinx.android.synthetic.main.navigation_bottom_sheet.bottom_sheet_navigation
 import kotlinx.android.synthetic.main.navigation_bottom_sheet.input_room_from_here
@@ -26,15 +29,12 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.R
 import ru.zakoulov.navigatorx.data.Marker
-import ru.zakoulov.navigatorx.map.Map
-import ru.zakoulov.navigatorx.map.RawMarkerData
 import ru.zakoulov.navigatorx.viewmodel.MapState
 import ru.zakoulov.navigatorx.viewmodel.State
 import ru.zakoulov.navigatorx.viewmodel.MainViewModel
 import ru.zakoulov.navigatorx.ui.buildingpicker.BuildingPickerFragment
 import ru.zakoulov.navigatorx.ui.hideKeyboard
 import ru.zakoulov.navigatorx.ui.showKeyboardFor
-import kotlin.random.Random
 
 class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
 
@@ -73,7 +73,6 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         bottom_sheet_navigation.setOnClickListener {  }
         bottom_sheet_room_picker_info.setOnClickListener {  }
         zoom_layout.setOnOutsideClickListener {
-            Log.d(TAG, "onViewCreated: outsideclick")
             viewModel.onOutsideClick()
         }
         roomPickerRoomInfo = bottom_sheet_room_info.findViewById(R.id.room_number)
@@ -87,8 +86,19 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                     }
                     is State.Map -> {
                         markerAdapter.data = it.mapState.mapData.markers
-                        Log.d(TAG, "onViewCreated, markerData: ${markerAdapter.data[0].positionX}")
-                        Log.d(TAG, "onViewCreated, markerData: ${markerAdapter.data[0].positionY}")
+                        floor_number.text = it.mapState.floor.toString()
+                        up_floor_arrow.setColorFilter(ContextCompat.getColor(requireContext(),
+                            if (it.mapState.floor == it.mapState.selectedBuilding.floors) {
+                                android.R.color.darker_gray
+                            } else {
+                                android.R.color.black
+                            }))
+                        down_floor_arrow.setColorFilter(ContextCompat.getColor(requireContext(),
+                            if (it.mapState.floor == 1) {
+                                android.R.color.darker_gray
+                            } else {
+                                android.R.color.black
+                            }))
                         when (val mapState = it.mapState) {
                             is MapState.Viewing -> {
                                 if (navigationBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
@@ -147,6 +157,13 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         toolbar.setOnClickListener {
             val buildingPicker = BuildingPickerFragment()
             buildingPicker.show(requireActivity().supportFragmentManager, buildingPicker.tag)
+        }
+
+        up_floor_arrow.setOnClickListener {
+            viewModel.onUpFloorSelected()
+        }
+        down_floor_arrow.setOnClickListener {
+            viewModel.onDownFloorSelected()
         }
     }
 

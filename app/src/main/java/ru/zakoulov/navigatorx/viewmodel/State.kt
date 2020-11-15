@@ -15,23 +15,27 @@ sealed class MapState(
     open val buildings: List<Building>,
     open val mapData: MapData,
     open val selectedBuilding: Building,
+    open val floor: Int,
 ) {
     data class Viewing(
         override val buildings: List<Building>,
         override val mapData: MapData,
-        override val selectedBuilding: Building
-    ) : MapState(buildings, mapData, selectedBuilding)
+        override val selectedBuilding: Building,
+        override val floor: Int
+    ) : MapState(buildings, mapData, selectedBuilding, floor)
 
     data class RoomSelected(
         override val buildings: List<Building>,
         override val mapData: MapData,
         override val selectedBuilding: Building,
+        override val floor: Int,
         val roomNumber: String
-    ) : MapState(buildings, mapData, selectedBuilding)
+    ) : MapState(buildings, mapData, selectedBuilding, floor)
 
     data class RoomPicking(
         override val buildings: List<Building>,
         override val mapData: MapData,
-        override val selectedBuilding: Building
-    ) : MapState(buildings, mapData, selectedBuilding)
+        override val selectedBuilding: Building,
+        override val floor: Int
+    ) : MapState(buildings, mapData, selectedBuilding, floor)
 }

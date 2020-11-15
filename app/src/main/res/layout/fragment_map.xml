@@ -91,7 +91,7 @@
         app:layout_anchor="@id/bottom_sheet_navigation"
         app:layout_anchorGravity="end|top">
         <ImageView
-            android:id="@+id/top_floor_arrow"
+            android:id="@+id/up_floor_arrow"
             android:layout_width="40dp"
             android:paddingTop="6dp"
             android:paddingStart="12dp"
@@ -111,7 +111,7 @@
             android:textSize="20sp"
             android:fontFamily="sans-serif-medium"/>
         <ImageView
-            android:id="@+id/bottom_floor_arrow"
+            android:id="@+id/down_floor_arrow"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"

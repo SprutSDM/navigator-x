@@ -26,7 +26,9 @@ class MainViewModel(
         mapState = MapState.Viewing(
             buildings = buildings,
             mapData = realmRepository.mapData.value,
-            selectedBuilding = buildings[0])
+            selectedBuilding = buildings[0],
+            floor = 1
+        )
     ))
     val state: StateFlow<State> = _state
 
@@ -43,7 +45,8 @@ class MainViewModel(
                             mapState = MapState.Viewing(
                                 buildings = buildings,
                                 mapData = mapData,
-                                selectedBuilding = buildings[0]
+                                selectedBuilding = buildings[0],
+                                floor = 1
                             )
                         )
                     }
@@ -51,7 +54,8 @@ class MainViewModel(
                         currentState.copy(mapState = MapState.Viewing(
                             buildings = currentState.mapState.buildings,
                             mapData = mapData,
-                            selectedBuilding = currentState.mapState.selectedBuilding
+                            selectedBuilding = currentState.mapState.selectedBuilding,
+                            floor = currentState.mapState.floor
                         ))
                     }
                 }
@@ -65,7 +69,8 @@ class MainViewModel(
                 _state.value = currentState.copy(mapState = MapState.Viewing(
                     buildings = currentState.mapState.buildings,
                     mapData = currentState.mapState.mapData,
-                    selectedBuilding = building
+                    selectedBuilding = building,
+                    floor = 1
                 ))
             }
         }
@@ -106,7 +111,8 @@ class MainViewModel(
                 buildings = currentState.mapState.buildings,
                 mapData = currentState.mapState.mapData,
                 selectedBuilding = currentState.mapState.selectedBuilding,
-                roomNumber = roomNumber
+                floor = currentState.mapState.floor,
+                roomNumber = roomNumber,
             ))
         }
     }
@@ -130,11 +136,42 @@ class MainViewModel(
         }
     }
 
+    fun onUpFloorSelected() {
+        val currentState = state.value
+        if (currentState is State.Map) {
+            val currentFloor = currentState.mapState.floor
+            if (currentFloor != currentState.mapState.selectedBuilding.floors) {
+                _state.value = currentState.copy(mapState = MapState.Viewing(
+                    buildings = currentState.mapState.buildings,
+                    mapData = currentState.mapState.mapData,
+                    selectedBuilding = currentState.mapState.selectedBuilding,
+                    floor = currentState.mapState.floor + 1
+                ))
+            }
+        }
+    }
+
+    fun onDownFloorSelected() {
+        val currentState = state.value
+        if (currentState is State.Map) {
+            val currentFloor = currentState.mapState.floor
+            if (currentFloor != 1) {
+                _state.value = currentState.copy(mapState = MapState.Viewing(
+                    buildings = currentState.mapState.buildings,
+                    mapData = currentState.mapState.mapData,
+                    selectedBuilding = currentState.mapState.selectedBuilding,
+                    floor = currentState.mapState.floor - 1
+                ))
+            }
+        }
+    }
+
     private fun transformToViewingState(currentState: State.Map) {
         _state.value = currentState.copy(mapState = MapState.Viewing(
             buildings = currentState.mapState.buildings,
             mapData = currentState.mapState.mapData,
-            selectedBuilding = currentState.mapState.selectedBuilding
+            selectedBuilding = currentState.mapState.selectedBuilding,
+            floor = currentState.mapState.floor
         ))
     }
 
@@ -142,17 +179,18 @@ class MainViewModel(
         _state.value = currentState.copy(mapState = MapState.RoomPicking(
             buildings = currentState.mapState.buildings,
             mapData = currentState.mapState.mapData,
-            selectedBuilding = currentState.mapState.selectedBuilding
+            selectedBuilding = currentState.mapState.selectedBuilding,
+            floor = currentState.mapState.floor
         ))
     }
 
     companion object {
         private val buildings = listOf(
-            Building(id = 0, title = "Главный корпус", address = "Кронверкский проспект, д. 49"),
-            Building(id = 1, title = "Корпус на Ломоносово", address = "Улица Ломоносова, д. 9"),
-            Building(id = 2, title = "Корпус на Гривцова", address = "Переулок Гривцова, д. 14"),
-            Building(id = 3, title = "Корпус на Чайковского", address = "Улица Чайковского, д. 11/2"),
-            Building(id = 4, title = "Корпус на Биржевой линии", address = "Биржевая линия, д. 14")
+            Building(id = 0, title = "Главный корпус", address = "Кронверкский проспект, д. 49", floors = 5),
+            Building(id = 1, title = "Корпус на Ломоносово", address = "Улица Ломоносова, д. 9", floors = 5),
+            Building(id = 2, title = "Корпус на Гривцова", address = "Переулок Гривцова, д. 14", floors = 5),
+            Building(id = 3, title = "Корпус на Чайковского", address = "Улица Чайковского, д. 11/2", floors = 5),
+            Building(id = 4, title = "Корпус на Биржевой линии", address = "Биржевая линия, д. 14", floors = 5)
         )
 
         private const val TAG = "MainViewModel"

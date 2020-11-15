@@ -18,7 +18,7 @@ class RealmMapper {
                         positionX = it.positionX.toFloat() - 3500,
                         positionY = it.positionY.toFloat() - 3500,
                         corpus = it.korpus,
-                        building = Building(id = it.building, title = "", address = ""),
+                        building = Building(id = it.building, title = "", address = "", floors = 6),
                         floor = it.floor,
                         roomNumber = it.labelText,
                         roomTitle = it.info
@@ -33,7 +33,7 @@ class RealmMapper {
                         positionX = it.positionX.toFloat() - 3500,
                         positionY = it.positionY.toFloat() - 3500,
                         corpus = it.korpus,
-                        building = Building(id = it.building, title = "", address = ""),
+                        building = Building(id = it.building, title = "", address = "", floors = 6),
                         floor = it.floor,
                         isUp = it.typeEnum == PointTypeEnum.STAIRS_UP
                     ))
