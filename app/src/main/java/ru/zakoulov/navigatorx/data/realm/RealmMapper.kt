@@ -8,15 +8,16 @@ import ru.zakoulov.navigatorx.data.PathDot
 class RealmMapper {
     fun map(realmPoints: List<MapPointModel>): MapData {
         val markers = mutableListOf<Marker>()
-        val pathDots = mutableListOf<PathDot>()
+        val pathDots = mutableMapOf<String, PathDot>()
         val pathConnections = mutableMapOf<String, MutableList<String>>()
         realmPoints.forEach {
             val id = it._id.toString()
-            pathDots.add(PathDot(
+            pathDots[id] = PathDot(
                 id = id,
                 positionX = it.positionX.toFloat(),
-                positionY = it.positionY.toFloat()
-            ))
+                positionY = it.positionY.toFloat(),
+                floor = it.floor
+            )
             pathConnections[id] = it.connectedIDs
             when (it.typeEnum) {
                 PointTypeEnum.PATH -> Unit //TODO

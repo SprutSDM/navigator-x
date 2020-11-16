@@ -2,7 +2,7 @@ package ru.zakoulov.navigatorx.data
 
 data class MapData(
     val markers: List<Marker>,
-    val pathDots: List<PathDot>,
+    val pathDots: Map<String, PathDot>,
     val pathConnections: Map<String, List<String>>
 ) {
     fun filterByFloor(floor: Int): MapData {

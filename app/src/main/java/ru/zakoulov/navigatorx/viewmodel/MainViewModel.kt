@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.data.Building
-import ru.zakoulov.navigatorx.data.MapData
 import ru.zakoulov.navigatorx.data.realm.RealmRepository
 
 class MainViewModel(
@@ -35,10 +34,18 @@ class MainViewModel(
     private val _events: MutableSharedFlow<Event> = MutableSharedFlow(extraBufferCapacity = 1)
     val events: SharedFlow<Event> = _events
 
+    private val mapPathResolver = MapPathResolver()
+
     private fun observeMapData() {
         viewModelScope.launch {
             realmRepository.mapData.collect { mapData ->
-                Log.d(TAG, "observeMapData: ${mapData.markers.size}")
+                val path = mapPathResolver.findPath(
+                    pathDots = mapData.pathDots,
+                    pathConnections = mapData.pathConnections,
+                    startDot = mapData.markers.first().id,
+                    finishDot = mapData.markers.last().id
+                )
+                Log.d(TAG, "observeMapData: path ${path.path} ${path.virtualDist}")
                 _state.value = when (val currentState = state.value) {
                     is State.Loading -> {
                         State.Map(
