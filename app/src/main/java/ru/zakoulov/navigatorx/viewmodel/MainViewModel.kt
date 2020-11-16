@@ -46,6 +46,7 @@ class MainViewModel(
                     finishDot = mapData.markers.last().id
                 )
                 Log.d(TAG, "observeMapData: path ${path.path} ${path.virtualDist}")
+                Log.d(TAG, "observeMapData: splitted path ${mapPathResolver.splitPathByFloors(path.path)}")
                 _state.value = when (val currentState = state.value) {
                     is State.Loading -> {
                         State.Map(
