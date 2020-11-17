@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.data.Building
+import ru.zakoulov.navigatorx.data.Marker
 import ru.zakoulov.navigatorx.data.realm.RealmRepository
 
 class MainViewModel(
@@ -112,15 +113,15 @@ class MainViewModel(
         }
     }
 
-    fun onRoomSelected(roomNumber: String) {
+    fun onMarkerSelected(marker: Marker) {
         val currentState = state.value
         if (currentState is State.Map) {
-            _state.value = currentState.copy(mapState = MapState.RoomSelected(
+            _state.value = currentState.copy(mapState = MapState.MarkerSelected(
                 buildings = currentState.mapState.buildings,
                 mapData = currentState.mapState.mapData,
                 selectedBuilding = currentState.mapState.selectedBuilding,
                 floor = currentState.mapState.floor,
-                roomNumber = roomNumber,
+                selectedMarker = marker,
             ))
         }
     }
@@ -138,7 +139,7 @@ class MainViewModel(
             is State.Loading -> _events.tryEmit(Event.NavigateBack)
             is State.Map -> when (currentState.mapState) {
                 is MapState.RoomPicking -> transformToViewingState(currentState)
-                is MapState.RoomSelected -> transformToViewingState(currentState)
+                is MapState.MarkerSelected -> transformToViewingState(currentState)
                 is MapState.Viewing -> _events.tryEmit(Event.NavigateBack)
             }
         }

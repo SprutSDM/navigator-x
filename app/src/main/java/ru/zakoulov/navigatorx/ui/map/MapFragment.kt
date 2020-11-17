@@ -116,13 +116,16 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                                 roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 building_title.text = mapState.selectedBuilding.title
                             }
-                            is MapState.RoomSelected -> {
+                            is MapState.MarkerSelected -> {
                                 navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 if (roomInfoBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                                     roomInfoBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                                 }
-                                roomPickerRoomInfo.text = "Ауд. ${mapState.roomNumber}"
+                                roomPickerRoomInfo.text = when (mapState.selectedMarker) {
+                                    is Marker.Room -> "Ауд. ${mapState.selectedMarker.roomNumber}"
+                                    else -> ""
+                                }
                             }
                             is MapState.RoomPicking -> {
                                 navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -177,7 +180,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
 
     override fun onMarkerSelected(marker: Marker) {
         when (marker) {
-            is Marker.Room -> viewModel.onRoomSelected(marker.roomNumber)
+            is Marker.Room -> viewModel.onMarkerSelected(marker)
         }
     }
 
