@@ -140,6 +140,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                                 pathForFloor.paths.forEach {
                                     zoom_layout.addPath(it.path)
                                 }
+                                zoom_layout.animatePaths()
                             } else {
                                 zoom_layout.resetPaths()
                             }
