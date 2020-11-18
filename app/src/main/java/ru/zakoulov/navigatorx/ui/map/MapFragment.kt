@@ -1,7 +1,6 @@
 package ru.zakoulov.navigatorx.ui.map
 
 import android.annotation.SuppressLint
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -132,6 +131,14 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                             } ?: run {
                                 setText(R.string.destination)
                                 setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
+                            }
+                        }
+                        it.mapState.pathInfo?.let { pathInfo ->
+                            val pathForFloor = pathInfo.floorPaths[it.mapState.floor]
+                            if (pathForFloor != null) {
+                                zoom_layout.setPath(pathForFloor.paths[0].path)
+                            } else {
+
                             }
                         }
                         when (val mapState = it.mapState) {

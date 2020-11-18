@@ -2,7 +2,6 @@ package ru.zakoulov.navigatorx.viewmodel
 
 import ru.zakoulov.navigatorx.data.PathDot
 import java.util.PriorityQueue
-import kotlin.math.floor
 import kotlin.math.pow
 
 class MapPathResolver(
@@ -13,7 +12,7 @@ class MapPathResolver(
         pathConnections: Map<String, List<String>>,
         startDot: String,
         finishDot: String
-    ): PathInfo {
+    ): FullPathInfo {
         fun getDist(dotId1: String, dotId2: String): Float{
             val pathDot1 = pathDots[dotId1] ?: return Float.POSITIVE_INFINITY
             val pathDot2 = pathDots[dotId2] ?: return Float.POSITIVE_INFINITY
@@ -51,13 +50,19 @@ class MapPathResolver(
         while (path.last().id in prevs) {
             path.add(pathDots[prevs[path.last().id]]!!)
         }
-        return PathInfo(
-            path = path.reversed(),
+        return FullPathInfo(
+            floorPaths = splitPathByFloors(path).mapValues { floorPaths ->
+                FloorPaths(paths = floorPaths.value.map { path ->
+                    Path(path.map { pathDot ->
+                        pathDot.positionX to pathDot.positionY
+                    })
+                })
+            },
             virtualDist = dists[finishDot]!!
         )
     }
 
-    fun splitPathByFloors(path: List<PathDot>): Map<Int, List<List<PathDot>>> {
+    private fun splitPathByFloors(path: List<PathDot>): Map<Int, List<List<PathDot>>> {
         val floorPaths = mutableMapOf<Int, MutableList<List<PathDot>>>()
         var currentPath = mutableListOf(path[0])
         for (i in 1 until path.size) {
@@ -78,9 +83,4 @@ class MapPathResolver(
         floorPaths[currentPath[0].floor]!!.add(currentPath)
         return floorPaths
     }
-
-    class PathInfo(
-        val path: List<PathDot>,
-        val virtualDist: Float
-    )
 }

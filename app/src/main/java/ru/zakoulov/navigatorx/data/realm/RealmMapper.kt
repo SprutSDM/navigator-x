@@ -36,7 +36,19 @@ class RealmMapper {
                 }
                 PointTypeEnum.MESSAGE -> Unit //TODO
                 PointTypeEnum.ICON -> Unit //TODO
-                PointTypeEnum.OTHER -> Unit //TODO
+                PointTypeEnum.OTHER -> {
+                    markers.add(Marker.Room(
+                        id = it._id.toString(),
+                        scaleVisible = it.scaleVisible.toFloat(),
+                        positionX = it.positionX.toFloat(),
+                        positionY = it.positionY.toFloat(),
+                        corpus = it.korpus,
+                        building = Building(id = it.building, title = "", address = "", floors = 6),
+                        floor = it.floor,
+                        roomNumber = it.labelText,
+                        roomTitle = it.info
+                    ))
+                }
                 PointTypeEnum.STAIRS_UP, PointTypeEnum.STAIRS_DOWN -> {
                     markers.add(Marker.Stairs(
                         id = it._id.toString(),

@@ -18,7 +18,8 @@ sealed class MapState(
     open val selectedBuilding: Building,
     open val floor: Int,
     open val departureMarker: Marker?,
-    open val destinationMarker: Marker?
+    open val destinationMarker: Marker?,
+    open val pathInfo: FullPathInfo?
 ) {
     data class Viewing(
         override val buildings: List<Building>,
@@ -26,14 +27,16 @@ sealed class MapState(
         override val selectedBuilding: Building,
         override val floor: Int,
         override val departureMarker: Marker? = null,
-        override val destinationMarker: Marker? = null
+        override val destinationMarker: Marker? = null,
+        override val pathInfo: FullPathInfo? = null
     ) : MapState(
         buildings = buildings,
         mapData = mapData,
         selectedBuilding = selectedBuilding,
         floor = floor,
         departureMarker = departureMarker,
-        destinationMarker = destinationMarker
+        destinationMarker = destinationMarker,
+        pathInfo = pathInfo
     )
 
     data class MarkerSelected(
@@ -43,6 +46,7 @@ sealed class MapState(
         override val floor: Int,
         override val departureMarker: Marker? = null,
         override val destinationMarker: Marker? = null,
+        override val pathInfo: FullPathInfo? = null,
         val selectedMarker: Marker
     ) : MapState(
         buildings = buildings,
@@ -50,7 +54,8 @@ sealed class MapState(
         selectedBuilding = selectedBuilding,
         floor = floor,
         departureMarker = departureMarker,
-        destinationMarker = destinationMarker
+        destinationMarker = destinationMarker,
+        pathInfo = pathInfo
     )
 
     data class RoomPicking(
@@ -60,12 +65,14 @@ sealed class MapState(
         override val floor: Int,
         override val departureMarker: Marker? = null,
         override val destinationMarker: Marker? = null,
+        override val pathInfo: FullPathInfo? = null
     ) : MapState(
         buildings = buildings,
         mapData = mapData,
         selectedBuilding = selectedBuilding,
         floor = floor,
         departureMarker = departureMarker,
-        destinationMarker = destinationMarker
+        destinationMarker = destinationMarker,
+        pathInfo = pathInfo
     )
 }
