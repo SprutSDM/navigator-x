@@ -136,9 +136,12 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                         it.mapState.pathInfo?.let { pathInfo ->
                             val pathForFloor = pathInfo.floorPaths[it.mapState.floor]
                             if (pathForFloor != null) {
-                                zoom_layout.setPath(pathForFloor.paths[0].path)
+                                zoom_layout.resetPaths()
+                                pathForFloor.paths.forEach {
+                                    zoom_layout.addPath(it.path)
+                                }
                             } else {
-
+                                zoom_layout.resetPaths()
                             }
                         }
                         when (val mapState = it.mapState) {
