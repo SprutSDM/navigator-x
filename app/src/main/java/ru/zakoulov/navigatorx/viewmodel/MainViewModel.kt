@@ -64,7 +64,9 @@ class MainViewModel(
                             buildings = currentState.mapState.buildings,
                             mapData = mapData.filterByFloor(1),
                             selectedBuilding = currentState.mapState.selectedBuilding,
-                            floor = currentState.mapState.floor
+                            floor = currentState.mapState.floor,
+                            destinationMarker = currentState.mapState.destinationMarker,
+                            departureMarker = currentState.mapState.departureMarker
                         ))
                     }
                 }
@@ -79,23 +81,37 @@ class MainViewModel(
                     buildings = currentState.mapState.buildings,
                     mapData = realmRepository.mapData.value.filterByFloor(1),
                     selectedBuilding = building,
-                    floor = 1
+                    floor = 1,
                 ))
             }
         }
     }
 
-    fun pickHereRoom() {
+    fun pickDepartureRoom() {
         val currentState = state.value
         if (currentState is State.Map) {
             transformToRoomPickState(currentState)
         }
     }
 
-    fun pickFromHereRoom() {
+    fun pickDestinationRoom() {
         val currentState = state.value
         if (currentState is State.Map) {
             transformToRoomPickState(currentState)
+        }
+    }
+
+    fun onRoomSelectedAsDeparture() {
+        val currentState = state.value
+        if (currentState is State.Map && currentState.mapState is MapState.MarkerSelected) {
+            transformToViewingState(currentState, departureMarker = currentState.mapState.selectedMarker)
+        }
+    }
+
+    fun onRoomSelectedAsDestination() {
+        val currentState = state.value
+        if (currentState is State.Map && currentState.mapState is MapState.MarkerSelected) {
+            transformToViewingState(currentState, destinationMarker = currentState.mapState.selectedMarker)
         }
     }
 
@@ -122,6 +138,8 @@ class MainViewModel(
                 selectedBuilding = currentState.mapState.selectedBuilding,
                 floor = currentState.mapState.floor,
                 selectedMarker = marker,
+                departureMarker = currentState.mapState.departureMarker,
+                destinationMarker = currentState.mapState.destinationMarker
             ))
         }
     }
@@ -154,7 +172,9 @@ class MainViewModel(
                     buildings = currentState.mapState.buildings,
                     mapData = realmRepository.mapData.value.filterByFloor(currentState.mapState.floor + 1),
                     selectedBuilding = currentState.mapState.selectedBuilding,
-                    floor = currentState.mapState.floor + 1
+                    floor = currentState.mapState.floor + 1,
+                    departureMarker = currentState.mapState.departureMarker,
+                    destinationMarker = currentState.mapState.destinationMarker
                 ))
             }
         }
@@ -169,27 +189,39 @@ class MainViewModel(
                     buildings = currentState.mapState.buildings,
                     mapData = realmRepository.mapData.value.filterByFloor(currentState.mapState.floor - 1),
                     selectedBuilding = currentState.mapState.selectedBuilding,
-                    floor = currentState.mapState.floor - 1
+                    floor = currentState.mapState.floor - 1,
+                    departureMarker = currentState.mapState.departureMarker,
+                    destinationMarker = currentState.mapState.destinationMarker
                 ))
             }
         }
     }
 
-    private fun transformToViewingState(currentState: State.Map) {
+    private fun transformToViewingState(
+        currentState: State.Map,
+        departureMarker: Marker? = null,
+        destinationMarker: Marker? = null
+    ) {
         _state.value = currentState.copy(mapState = MapState.Viewing(
             buildings = currentState.mapState.buildings,
             mapData = currentState.mapState.mapData,
             selectedBuilding = currentState.mapState.selectedBuilding,
-            floor = currentState.mapState.floor
+            floor = currentState.mapState.floor,
+            departureMarker = departureMarker ?: currentState.mapState.departureMarker,
+            destinationMarker = destinationMarker ?: currentState.mapState.destinationMarker
         ))
     }
 
-    private fun transformToRoomPickState(currentState: State.Map) {
+    private fun transformToRoomPickState(
+        currentState: State.Map
+    ) {
         _state.value = currentState.copy(mapState = MapState.RoomPicking(
             buildings = currentState.mapState.buildings,
             mapData = currentState.mapState.mapData,
             selectedBuilding = currentState.mapState.selectedBuilding,
-            floor = currentState.mapState.floor
+            floor = currentState.mapState.floor,
+            departureMarker = currentState.mapState.departureMarker,
+            destinationMarker = currentState.mapState.destinationMarker
         ))
     }
 

@@ -3,10 +3,9 @@
     <string name="pick_building_title">Выбор корпуса</string>
     <string name="button_here">СЮДА</string>
     <string name="button_from_here">ОТСЮДА</string>
-    <string name="here">Сюда</string>
-    <string name="from_here">Отсюда</string>
+    <string name="departure">Откуда</string>
+    <string name="destination">Куда</string>
     <string name="cancel">Отменить</string>
-    <string name="where">Куда</string>
 
     <string name="realm_app_id">navigator-unscj</string>
 </resources>

@@ -23,7 +23,7 @@
         android:id="@+id/input_room"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="@string/where"
+        android:hint="@string/destination"
         android:background="@android:color/transparent"
         android:layout_marginStart="4dp"
         android:singleLine="true"

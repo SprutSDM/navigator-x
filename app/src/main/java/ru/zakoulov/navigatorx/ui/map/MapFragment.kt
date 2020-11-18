@@ -1,6 +1,7 @@
 package ru.zakoulov.navigatorx.ui.map
 
 import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -20,9 +21,11 @@ import kotlinx.android.synthetic.main.fragment_map.toolbar
 import kotlinx.android.synthetic.main.fragment_map.up_floor_arrow
 import kotlinx.android.synthetic.main.fragment_map.zoom_layout
 import kotlinx.android.synthetic.main.navigation_bottom_sheet.bottom_sheet_navigation
-import kotlinx.android.synthetic.main.navigation_bottom_sheet.input_room_from_here
-import kotlinx.android.synthetic.main.navigation_bottom_sheet.input_room_here
+import kotlinx.android.synthetic.main.navigation_bottom_sheet.input_departure_room
+import kotlinx.android.synthetic.main.navigation_bottom_sheet.input_destination_room
 import kotlinx.android.synthetic.main.room_info_bottom_sheet.bottom_sheet_room_info
+import kotlinx.android.synthetic.main.room_info_bottom_sheet.button_select_as_departure
+import kotlinx.android.synthetic.main.room_info_bottom_sheet.button_select_as_destination
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.bottom_sheet_room_picker_info
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.input_room
 import kotlinx.coroutines.flow.collect
@@ -107,6 +110,30 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                                 }
                             )
                         )
+                        input_departure_room.apply {
+                            it.mapState.departureMarker?.let { marker ->
+                                text = when (marker) {
+                                    is Marker.Room -> marker.roomNumber
+                                    else -> ""
+                                }
+                                setTextColor(ContextCompat.getColor(context, android.R.color.black))
+                            } ?: run {
+                                setText(R.string.departure)
+                                setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
+                            }
+                        }
+                        input_destination_room.apply {
+                            it.mapState.destinationMarker?.let { marker ->
+                                text = when (marker) {
+                                    is Marker.Room -> marker.roomNumber
+                                    else -> ""
+                                }
+                                setTextColor(ContextCompat.getColor(context, android.R.color.black))
+                            } ?: run {
+                                setText(R.string.destination)
+                                setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
+                            }
+                        }
                         when (val mapState = it.mapState) {
                             is MapState.Viewing -> {
                                 if (navigationBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
@@ -158,11 +185,18 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
             override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
         })
 
-        input_room_here.setOnClickListener {
-            viewModel.pickHereRoom()
+        input_departure_room.setOnClickListener {
+            viewModel.pickDepartureRoom()
         }
-        input_room_from_here.setOnClickListener {
-            viewModel.pickFromHereRoom()
+        input_destination_room.setOnClickListener {
+            viewModel.pickDestinationRoom()
+        }
+
+        button_select_as_destination.setOnClickListener {
+            viewModel.onRoomSelectedAsDestination()
+        }
+        button_select_as_departure.setOnClickListener {
+            viewModel.onRoomSelectedAsDeparture()
         }
 
         toolbar.setOnClickListener {

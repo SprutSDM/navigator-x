@@ -55,7 +55,7 @@
 <!--        app:layout_constraintBottom_toBottomOf="@id/room_image"/>-->
 
     <FrameLayout
-        android:id="@+id/button_here"
+        android:id="@+id/button_select_as_departure"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -67,41 +67,7 @@
         android:focusable="true"
         app:layout_constraintTop_toBottomOf="@id/room_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_from_here">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="18dp"
-            android:layout_gravity="center">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_arrow"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/button_here"
-                android:gravity="center"
-                android:paddingStart="4dp"/>
-        </LinearLayout>
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/button_from_here"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/shape_button"
-        android:orientation="horizontal"
-        android:layout_marginStart="4dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintTop_toBottomOf="@id/room_layout"
-        app:layout_constraintStart_toEndOf="@id/button_here"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toStartOf="@id/button_select_as_destination">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="18dp"
@@ -117,8 +83,42 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:fontFamily="sans-serif-medium"
-                android:gravity="center"
                 android:text="@string/button_from_here"
+                android:gravity="center"
+                android:paddingStart="4dp"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/button_select_as_destination"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_button"
+        android:orientation="horizontal"
+        android:layout_marginStart="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@id/room_layout"
+        app:layout_constraintStart_toEndOf="@id/button_select_as_departure"
+        app:layout_constraintEnd_toEndOf="parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="@string/button_here"
                 android:paddingStart="4dp"/>
         </LinearLayout>
     </FrameLayout>
@@ -131,7 +131,7 @@
         android:layout_marginTop="16dp"
         android:showDividers="middle"
         android:divider="@drawable/space_room_place_info"
-        app:layout_constraintTop_toBottomOf="@id/button_here"
+        app:layout_constraintTop_toBottomOf="@id/button_select_as_destination"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <include layout="@layout/element_room_place_info"/>
