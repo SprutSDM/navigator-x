@@ -19,7 +19,8 @@ sealed class MapState(
     open val floor: Int,
     open val departureMarker: Marker?,
     open val destinationMarker: Marker?,
-    open val pathInfo: FullPathInfo?
+    open val pathInfo: FullPathInfo?,
+    open val floorPaths: FloorPaths?
 ) {
     data class Viewing(
         override val buildings: List<Building>,
@@ -28,7 +29,8 @@ sealed class MapState(
         override val floor: Int,
         override val departureMarker: Marker? = null,
         override val destinationMarker: Marker? = null,
-        override val pathInfo: FullPathInfo? = null
+        override val pathInfo: FullPathInfo? = null,
+        override val floorPaths: FloorPaths? = null
     ) : MapState(
         buildings = buildings,
         mapData = mapData,
@@ -36,7 +38,8 @@ sealed class MapState(
         floor = floor,
         departureMarker = departureMarker,
         destinationMarker = destinationMarker,
-        pathInfo = pathInfo
+        pathInfo = pathInfo,
+        floorPaths = floorPaths
     )
 
     data class MarkerSelected(
@@ -47,6 +50,7 @@ sealed class MapState(
         override val departureMarker: Marker? = null,
         override val destinationMarker: Marker? = null,
         override val pathInfo: FullPathInfo? = null,
+        override val floorPaths: FloorPaths? = null,
         val selectedMarker: Marker
     ) : MapState(
         buildings = buildings,
@@ -55,7 +59,8 @@ sealed class MapState(
         floor = floor,
         departureMarker = departureMarker,
         destinationMarker = destinationMarker,
-        pathInfo = pathInfo
+        pathInfo = pathInfo,
+        floorPaths = floorPaths
     )
 
     data class RoomPicking(
@@ -65,7 +70,8 @@ sealed class MapState(
         override val floor: Int,
         override val departureMarker: Marker? = null,
         override val destinationMarker: Marker? = null,
-        override val pathInfo: FullPathInfo? = null
+        override val pathInfo: FullPathInfo? = null,
+        override val floorPaths: FloorPaths? = null
     ) : MapState(
         buildings = buildings,
         mapData = mapData,
@@ -73,6 +79,7 @@ sealed class MapState(
         floor = floor,
         departureMarker = departureMarker,
         destinationMarker = destinationMarker,
-        pathInfo = pathInfo
+        pathInfo = pathInfo,
+        floorPaths = floorPaths
     )
 }

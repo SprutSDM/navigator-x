@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.data.Building
+import ru.zakoulov.navigatorx.data.MapData
 import ru.zakoulov.navigatorx.data.Marker
 import ru.zakoulov.navigatorx.data.realm.RealmRepository
 
@@ -56,7 +57,7 @@ class MainViewModel(
                     is State.Map -> {
                         currentState.copy(mapState = MapState.Viewing(
                             buildings = currentState.mapState.buildings,
-                            mapData = mapData.filterByFloor(1),
+                            mapData = mapData.filterByFloor(currentState.mapState.floor),
                             selectedBuilding = currentState.mapState.selectedBuilding,
                             floor = currentState.mapState.floor,
                             destinationMarker = currentState.mapState.destinationMarker,
@@ -72,13 +73,14 @@ class MainViewModel(
     fun selectBuilding(building: Building) {
         when (val currentState = state.value) {
             is State.Map -> {
-                _state.value = currentState.copy(mapState = MapState.Viewing(
-                    buildings = currentState.mapState.buildings,
-                    mapData = realmRepository.mapData.value.filterByFloor(1),
-                    selectedBuilding = building,
-                    floor = 1,
-                    pathInfo = currentState.mapState.pathInfo
-                ))
+                if (building != currentState.mapState.selectedBuilding) {
+                    _state.value = currentState.copy(mapState = MapState.Viewing(
+                        buildings = currentState.mapState.buildings,
+                        mapData = realmRepository.mapData.value.filterByFloor(1),
+                        selectedBuilding = building,
+                        floor = 1,
+                    ))
+                }
             }
         }
     }
@@ -108,7 +110,8 @@ class MainViewModel(
                     finishDot = destinationMarker.id
                 )
             }
-            transformToViewingState(currentState, departureMarker = currentState.mapState.selectedMarker, pathInfo = pathInfo)
+            transformToViewingState(currentState, departureMarker = currentState.mapState.selectedMarker,
+                pathInfo = pathInfo)
         }
     }
 
@@ -123,7 +126,8 @@ class MainViewModel(
                     finishDot = currentState.mapState.selectedMarker.id
                 )
             }
-            transformToViewingState(currentState, destinationMarker = currentState.mapState.selectedMarker, pathInfo = pathInfo)
+            transformToViewingState(currentState, destinationMarker = currentState.mapState.selectedMarker,
+                pathInfo = pathInfo)
         }
     }
 
@@ -152,7 +156,8 @@ class MainViewModel(
                 selectedMarker = marker,
                 departureMarker = currentState.mapState.departureMarker,
                 destinationMarker = currentState.mapState.destinationMarker,
-                pathInfo = currentState.mapState.pathInfo
+                pathInfo = currentState.mapState.pathInfo,
+                floorPaths = currentState.mapState.pathInfo?.floorPaths?.get(currentState.mapState.floor)
             ))
         }
     }
@@ -181,15 +186,11 @@ class MainViewModel(
         if (currentState is State.Map) {
             val currentFloor = currentState.mapState.floor
             if (currentFloor != currentState.mapState.selectedBuilding.floors) {
-                _state.value = currentState.copy(mapState = MapState.Viewing(
-                    buildings = currentState.mapState.buildings,
+                transformToViewingState(
+                    currentState = currentState,
                     mapData = realmRepository.mapData.value.filterByFloor(currentState.mapState.floor + 1),
-                    selectedBuilding = currentState.mapState.selectedBuilding,
-                    floor = currentState.mapState.floor + 1,
-                    departureMarker = currentState.mapState.departureMarker,
-                    destinationMarker = currentState.mapState.destinationMarker,
-                    pathInfo = currentState.mapState.pathInfo
-                ))
+                    floor = currentState.mapState.floor + 1
+                )
             }
         }
     }
@@ -199,33 +200,33 @@ class MainViewModel(
         if (currentState is State.Map) {
             val currentFloor = currentState.mapState.floor
             if (currentFloor != 1) {
-                _state.value = currentState.copy(mapState = MapState.Viewing(
-                    buildings = currentState.mapState.buildings,
+                transformToViewingState(
+                    currentState = currentState,
                     mapData = realmRepository.mapData.value.filterByFloor(currentState.mapState.floor - 1),
-                    selectedBuilding = currentState.mapState.selectedBuilding,
-                    floor = currentState.mapState.floor - 1,
-                    departureMarker = currentState.mapState.departureMarker,
-                    destinationMarker = currentState.mapState.destinationMarker,
-                    pathInfo = currentState.mapState.pathInfo
-                ))
+                    floor = currentState.mapState.floor - 1
+                )
             }
         }
     }
 
     private fun transformToViewingState(
         currentState: State.Map,
+        mapData: MapData? = null,
+        selectedBuilding: Building? = null,
+        floor: Int? = null,
         departureMarker: Marker? = null,
         destinationMarker: Marker? = null,
         pathInfo: FullPathInfo? = null
     ) {
         _state.value = currentState.copy(mapState = MapState.Viewing(
             buildings = currentState.mapState.buildings,
-            mapData = currentState.mapState.mapData,
-            selectedBuilding = currentState.mapState.selectedBuilding,
-            floor = currentState.mapState.floor,
+            mapData = mapData ?: currentState.mapState.mapData,
+            selectedBuilding = selectedBuilding ?: currentState.mapState.selectedBuilding,
+            floor = floor ?: currentState.mapState.floor,
             departureMarker = departureMarker ?: currentState.mapState.departureMarker,
             destinationMarker = destinationMarker ?: currentState.mapState.destinationMarker,
-            pathInfo = pathInfo ?: currentState.mapState.pathInfo
+            pathInfo = pathInfo ?: currentState.mapState.pathInfo,
+            floorPaths = (pathInfo ?: currentState.mapState.pathInfo)?.floorPaths?.get(floor ?: currentState.mapState.floor)
         ))
     }
 
@@ -239,7 +240,8 @@ class MainViewModel(
             floor = currentState.mapState.floor,
             departureMarker = currentState.mapState.departureMarker,
             destinationMarker = currentState.mapState.destinationMarker,
-            pathInfo = currentState.mapState.pathInfo
+            pathInfo = currentState.mapState.pathInfo,
+            floorPaths = currentState.mapState.pathInfo?.floorPaths?.get(currentState.mapState.floor)
         ))
     }
 

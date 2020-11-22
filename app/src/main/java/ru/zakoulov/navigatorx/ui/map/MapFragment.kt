@@ -37,6 +37,7 @@ import ru.zakoulov.navigatorx.viewmodel.MainViewModel
 import ru.zakoulov.navigatorx.ui.buildingpicker.BuildingPickerFragment
 import ru.zakoulov.navigatorx.ui.hideKeyboard
 import ru.zakoulov.navigatorx.ui.showKeyboardFor
+import ru.zakoulov.navigatorx.viewmodel.core.modelWatcher
 
 class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
 
@@ -59,6 +60,23 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
 //    private val map = Map(rawMarkers)
 
     lateinit var markerAdapter: MarkerAdapter
+
+    val mapWatcher = modelWatcher<MapState> {
+        watch(MapState::floorPaths) { floorPaths ->
+            if (floorPaths == null) {
+                zoom_layout.resetPaths()
+            } else {
+                zoom_layout.resetPaths()
+                floorPaths.paths.forEach {
+                    zoom_layout.addPath(it.path)
+                }
+                zoom_layout.animatePaths()
+            }
+        }
+        watch(MapState::mapData) { mapData ->
+            markerAdapter.data = mapData.markers
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -83,11 +101,9 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
             viewModel.state.collect {
                 Log.d(TAG, "onViewCreated: state: ${it}")
                 when (it) {
-                    is State.Loading -> {
-
-                    }
+                    is State.Loading -> Unit
                     is State.Map -> {
-                        markerAdapter.data = it.mapState.mapData.markers
+                        mapWatcher(it.mapState)
                         floor_number.text = it.mapState.floor.toString()
                         up_floor_arrow.setColorFilter(
                             ContextCompat.getColor(
@@ -131,18 +147,6 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                             } ?: run {
                                 setText(R.string.destination)
                                 setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
-                            }
-                        }
-                        it.mapState.pathInfo?.let { pathInfo ->
-                            val pathForFloor = pathInfo.floorPaths[it.mapState.floor]
-                            if (pathForFloor != null) {
-                                zoom_layout.resetPaths()
-                                pathForFloor.paths.forEach {
-                                    zoom_layout.addPath(it.path)
-                                }
-                                zoom_layout.animatePaths()
-                            } else {
-                                zoom_layout.resetPaths()
                             }
                         }
                         when (val mapState = it.mapState) {
