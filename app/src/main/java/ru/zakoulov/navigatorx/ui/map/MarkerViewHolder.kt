@@ -17,7 +17,8 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
         positionX = markerData.positionX
         positionY = markerData.positionY
         visibilityRate = markerData.scaleVisible
-        view.visibility = View.INVISIBLE
+        // TODO replace to View.INVISIBLE after optimize UI updates
+        view.visibility = View.VISIBLE
         isVisible = false
         view.setOnClickListener {
             callbacks.onMarkerSelected(markerData)
@@ -28,10 +29,11 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
     override fun getPositionY() = positionY
 
     override fun onVisibilityRateChanged(rate: Float) {
-        when {
-            !isVisible && rate >= visibilityRate -> showView()
-            isVisible && rate < visibilityRate - DEPTH_SHIFT -> hideView()
-        }
+        // TODO uncomment after optimize UI updates
+//        when {
+//            !isVisible && rate >= visibilityRate -> showView()
+//            isVisible && rate < visibilityRate - DEPTH_SHIFT -> hideView()
+//        }
     }
 
     private fun showView() {
