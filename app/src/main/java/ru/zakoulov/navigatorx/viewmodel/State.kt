@@ -14,7 +14,7 @@ sealed class State {
 
 sealed class MapState(
     open val buildings: List<Building>,
-    open val mapData: MapData,
+    open val markers: List<Marker>,
     open val selectedBuilding: Building,
     open val floor: Int,
     open val departureMarker: Marker?,
@@ -24,7 +24,7 @@ sealed class MapState(
 ) {
     data class Viewing(
         override val buildings: List<Building>,
-        override val mapData: MapData,
+        override val markers: List<Marker>,
         override val selectedBuilding: Building,
         override val floor: Int,
         override val departureMarker: Marker? = null,
@@ -33,7 +33,7 @@ sealed class MapState(
         override val floorPaths: FloorPaths? = null
     ) : MapState(
         buildings = buildings,
-        mapData = mapData,
+        markers = markers,
         selectedBuilding = selectedBuilding,
         floor = floor,
         departureMarker = departureMarker,
@@ -44,7 +44,7 @@ sealed class MapState(
 
     data class MarkerSelected(
         override val buildings: List<Building>,
-        override val mapData: MapData,
+        override val markers: List<Marker>,
         override val selectedBuilding: Building,
         override val floor: Int,
         override val departureMarker: Marker? = null,
@@ -54,7 +54,7 @@ sealed class MapState(
         val selectedMarker: Marker
     ) : MapState(
         buildings = buildings,
-        mapData = mapData,
+        markers = markers,
         selectedBuilding = selectedBuilding,
         floor = floor,
         departureMarker = departureMarker,
@@ -65,7 +65,7 @@ sealed class MapState(
 
     data class RoomPicking(
         override val buildings: List<Building>,
-        override val mapData: MapData,
+        override val markers: List<Marker>,
         override val selectedBuilding: Building,
         override val floor: Int,
         override val departureMarker: Marker? = null,
@@ -74,7 +74,7 @@ sealed class MapState(
         override val floorPaths: FloorPaths? = null
     ) : MapState(
         buildings = buildings,
-        mapData = mapData,
+        markers = markers,
         selectedBuilding = selectedBuilding,
         floor = floor,
         departureMarker = departureMarker,

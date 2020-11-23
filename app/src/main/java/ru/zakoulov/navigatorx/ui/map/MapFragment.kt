@@ -73,8 +73,8 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                 zoom_layout.animatePaths()
             }
         }
-        watch(MapState::mapData) { mapData ->
-            markerAdapter.data = mapData.markers
+        watch(MapState::markers) { markers ->
+            markerAdapter.data = markers
         }
     }
 
