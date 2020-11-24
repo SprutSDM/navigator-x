@@ -241,7 +241,9 @@ class MainViewModel(
     ) {
         _state.value = currentState.copy(mapState = MapState.Viewing(
             buildings = currentState.mapState.buildings,
-            markers = markers ?: currentState.mapState.markers,
+            markers = (markers ?: currentState.mapState.markers).map {
+                if (it.isSelected) it.copy(isSelected = false) else it
+            },
             selectedBuilding = selectedBuilding ?: currentState.mapState.selectedBuilding,
             floor = floor ?: currentState.mapState.floor,
             departureMarker = departureMarker ?: currentState.mapState.departureMarker,
