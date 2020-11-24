@@ -6,6 +6,9 @@ import android.widget.TextView
 import com.otaliastudios.zoom.ZoomMapViewHolder
 import ru.zakoulov.navigatorx.R
 import ru.zakoulov.navigatorx.data.Marker
+import ru.zakoulov.navigatorx.ui.setBackgroundShapeColor
+import ru.zakoulov.navigatorx.ui.setTextColorRes
+import ru.zakoulov.navigatorx.ui.setTintColor
 
 sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbacks) : ZoomMapViewHolder(view) {
     private var positionX: Float = 0f
@@ -66,7 +69,7 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
     }
 
     class Room(view: View, callbacks: MarkerCallbacks) : MarkerViewHolder(view, callbacks) {
-        private var markerPointer: View = view.findViewById(R.id.marker_pointer)
+        private var markerPointer: ImageView = view.findViewById(R.id.marker_pointer)
         private var roomNumber: TextView = view.findViewById(R.id.room_number)
 
         override fun getPivotX() = view.width / 2f
@@ -74,6 +77,15 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
 
         override fun setupViewHolder(markerData: MarkerData) {
             super.setupViewHolder(markerData)
+            if (markerData.isSelected) {
+                markerPointer.setTintColor(R.color.colorPrimary)
+                roomNumber.setBackgroundShapeColor(R.color.colorPrimary)
+                roomNumber.setTextColorRes(android.R.color.white)
+            } else {
+                markerPointer.setTintColor(android.R.color.white)
+                roomNumber.setBackgroundShapeColor(android.R.color.white)
+                roomNumber.setTextColorRes(android.R.color.black)
+            }
             (markerData.marker as? Marker.Room)?.let {
                 roomNumber.text = markerData.marker.roomNumber
             }
