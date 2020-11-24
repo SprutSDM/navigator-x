@@ -131,6 +131,11 @@ class MainViewModel(
 
     private fun findPathAndUpdateState(currentState: State.Map, departureMarker: Marker?, destinationMarker: Marker?) {
         val pathInfo = if (departureMarker != null && destinationMarker != null) {
+            // If departure or destination marker was reselected, we don't have to find and animate the same path
+            if (currentState.mapState.departureMarker?.id == departureMarker.id &&
+                currentState.mapState.destinationMarker?.id == destinationMarker.id) {
+                return
+            }
             val mapData = realmRepository.mapData.value
             mapPathResolver.findPath(
                 pathDots = mapData.pathDots,
