@@ -6,6 +6,7 @@
     <string name="departure">Откуда</string>
     <string name="destination">Куда</string>
     <string name="cancel">Отменить</string>
+    <string name="path_was_not_found">Путь не найден</string>
 
     <string name="realm_app_id">navigator-unscj</string>
 </resources>

@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.data.Building
-import ru.zakoulov.navigatorx.data.MapData
 import ru.zakoulov.navigatorx.data.Marker
 import ru.zakoulov.navigatorx.data.realm.RealmRepository
 import ru.zakoulov.navigatorx.ui.map.MarkerData
@@ -111,35 +110,53 @@ class MainViewModel(
     fun onRoomSelectedAsDeparture() {
         val currentState = state.value
         if (currentState is State.Map && currentState.mapState is MapState.MarkerSelected) {
-            val pathInfo = currentState.mapState.destinationMarker?.let { destinationMarker ->
-                val mapData = realmRepository.mapData.value
-                mapPathResolver.findPath(
-                    pathDots = mapData.pathDots,
-                    pathConnections = mapData.pathConnections,
-                    startDot = currentState.mapState.selectedMarker.id,
-                    finishDot = destinationMarker.id
-                )
-            }
-            transformToViewingState(currentState, departureMarker = currentState.mapState.selectedMarker,
-                pathInfo = pathInfo)
+            findPathAndUpdateState(
+                currentState = currentState,
+                departureMarker = currentState.mapState.selectedMarker,
+                destinationMarker = currentState.mapState.destinationMarker
+            )
         }
     }
 
     fun onRoomSelectedAsDestination() {
         val currentState = state.value
         if (currentState is State.Map && currentState.mapState is MapState.MarkerSelected) {
-            val pathInfo = currentState.mapState.departureMarker?.let { departureMarker ->
-                val mapData = realmRepository.mapData.value
-                mapPathResolver.findPath(
-                    pathDots = mapData.pathDots,
-                    pathConnections = mapData.pathConnections,
-                    startDot = departureMarker.id,
-                    finishDot = currentState.mapState.selectedMarker.id
-                )
-            }
-            transformToViewingState(currentState, destinationMarker = currentState.mapState.selectedMarker,
-                pathInfo = pathInfo)
+            findPathAndUpdateState(
+                currentState = currentState,
+                departureMarker = currentState.mapState.departureMarker,
+                destinationMarker = currentState.mapState.selectedMarker,
+            )
         }
+    }
+
+    private fun findPathAndUpdateState(currentState: State.Map, departureMarker: Marker?, destinationMarker: Marker?) {
+        val pathInfo = if (departureMarker != null && destinationMarker != null) {
+            val mapData = realmRepository.mapData.value
+            mapPathResolver.findPath(
+                pathDots = mapData.pathDots,
+                pathConnections = mapData.pathConnections,
+                startDot = departureMarker.id,
+                finishDot = destinationMarker.id
+            ).also {
+                if (it == null) {
+                    _events.tryEmit(Event.NoPathFound)
+                }
+            }
+        } else {
+            null
+        }
+        _state.value = currentState.copy(mapState = MapState.Viewing(
+            buildings = currentState.mapState.buildings,
+            selectedBuilding = currentState.mapState.selectedBuilding,
+            floor = currentState.mapState.floor,
+            markers = currentState.mapState.markers.map {
+                if (it.isSelected) it.copy(isSelected = false) else it
+            },
+            departureMarker = departureMarker,
+            destinationMarker = destinationMarker,
+            pathInfo = pathInfo,
+            floorPaths = pathInfo?.floorPaths?.get(currentState.mapState.floor)
+        ))
     }
 
     fun onRoomInfoBSClosed() {

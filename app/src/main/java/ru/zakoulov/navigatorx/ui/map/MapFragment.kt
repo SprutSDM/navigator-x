@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -37,6 +38,7 @@ import ru.zakoulov.navigatorx.viewmodel.MainViewModel
 import ru.zakoulov.navigatorx.ui.buildingpicker.BuildingPickerFragment
 import ru.zakoulov.navigatorx.ui.hideKeyboard
 import ru.zakoulov.navigatorx.ui.showKeyboardFor
+import ru.zakoulov.navigatorx.viewmodel.Event
 import ru.zakoulov.navigatorx.viewmodel.core.modelWatcher
 
 class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
@@ -96,7 +98,15 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
             viewModel.onOutsideClick()
         }
         roomPickerRoomInfo = bottom_sheet_room_info.findViewById(R.id.room_number)
-
+        lifecycleScope.launch {
+            viewModel.events.collect {
+                when (it) {
+                    is Event.NoPathFound -> {
+                        Toast.makeText(context, getString(R.string.path_was_not_found), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
         lifecycleScope.launch {
             viewModel.state.collect {
                 Log.d(TAG, "onViewCreated: state: ${it}")

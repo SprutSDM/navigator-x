@@ -12,7 +12,7 @@ class MapPathResolver(
         pathConnections: Map<String, List<String>>,
         startDot: String,
         finishDot: String
-    ): FullPathInfo {
+    ): FullPathInfo? {
         fun getDist(dotId1: String, dotId2: String): Float{
             val pathDot1 = pathDots[dotId1] ?: return Float.POSITIVE_INFINITY
             val pathDot2 = pathDots[dotId2] ?: return Float.POSITIVE_INFINITY
@@ -46,9 +46,9 @@ class MapPathResolver(
                 }
             }
         }
-        val path = mutableListOf(pathDots[finishDot]!!)
+        val path = mutableListOf(pathDots[finishDot] ?: return null)
         while (path.last().id in prevs) {
-            path.add(pathDots[prevs[path.last().id]]!!)
+            path.add(pathDots[prevs[path.last().id]] ?: return null)
         }
         return FullPathInfo(
             floorPaths = splitPathByFloors(path).mapValues { floorPaths ->
@@ -58,7 +58,7 @@ class MapPathResolver(
                     })
                 })
             },
-            virtualDist = dists[finishDot]!!
+            virtualDist = dists[finishDot] ?: return null
         )
     }
 
