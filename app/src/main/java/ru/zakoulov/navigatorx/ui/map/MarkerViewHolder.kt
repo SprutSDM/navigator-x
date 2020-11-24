@@ -13,15 +13,15 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
     private var visibilityRate: Float = 0f
     private var isVisible: Boolean = false
 
-    open fun setupViewHolder(markerData: Marker) {
-        positionX = markerData.positionX
-        positionY = markerData.positionY
-        visibilityRate = markerData.scaleVisible
+    open fun setupViewHolder(markerData: MarkerData) {
+        positionX = markerData.marker.positionX
+        positionY = markerData.marker.positionY
+        visibilityRate = markerData.marker.scaleVisible
         // TODO replace to View.INVISIBLE after optimize UI updates
         view.visibility = View.VISIBLE
         isVisible = false
         view.setOnClickListener {
-            callbacks.onMarkerSelected(markerData)
+            callbacks.onMarkerSelected(markerData.marker)
         }
     }
 
@@ -72,10 +72,10 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
         override fun getPivotX() = view.width / 2f
         override fun getPivotY() = markerPointer.bottom.toFloat()
 
-        override fun setupViewHolder(markerData: Marker) {
+        override fun setupViewHolder(markerData: MarkerData) {
             super.setupViewHolder(markerData)
-            (markerData as? Marker.Room)?.let {
-                roomNumber.text = markerData.roomNumber
+            (markerData.marker as? Marker.Room)?.let {
+                roomNumber.text = markerData.marker.roomNumber
             }
         }
     }
@@ -87,9 +87,9 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
         override fun getPivotX() = view.width / 2f
         override fun getPivotY() = markerPointer.bottom.toFloat()
 
-        override fun setupViewHolder(markerData: Marker) {
+        override fun setupViewHolder(markerData: MarkerData) {
             super.setupViewHolder(markerData)
-            (markerData as? Marker.Stairs)?.let {
+            (markerData.marker as? Marker.Stairs)?.let {
                 arrow.rotation = if (it.isUp) 180f else 0f
             }
         }

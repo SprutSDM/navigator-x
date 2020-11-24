@@ -1,6 +1,5 @@
 package ru.zakoulov.navigatorx.ui.map
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import ru.zakoulov.navigatorx.R
 import ru.zakoulov.navigatorx.data.Marker
 
 class MarkerAdapter(
-    data: List<Marker>,
+    data: List<MarkerData>,
     private val callbacks: MarkerCallbacks
 ) : ZoomMapAdapter<MarkerViewHolder>() {
 
@@ -40,12 +39,13 @@ class MarkerAdapter(
     }
 
     override fun bindViewHolder(viewHolder: MarkerViewHolder, position: Int, type: Int) {
-        val marker = data[position]
-        viewHolder.setupViewHolder(marker)
+        val markerData = data[position]
+        viewHolder.setupViewHolder(markerData)
     }
 
     override fun getTypeFor(position: Int): Int {
-        return when (data[position]) {
+        val markerData = data[position]
+        return when (markerData.marker) {
             is Marker.Room -> TYPE_ROOM
             is Marker.Stairs -> TYPE_STAIRS
             else -> TYPE_ROOM

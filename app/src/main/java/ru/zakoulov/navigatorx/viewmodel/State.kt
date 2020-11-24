@@ -3,6 +3,7 @@ package ru.zakoulov.navigatorx.viewmodel
 import ru.zakoulov.navigatorx.data.Building
 import ru.zakoulov.navigatorx.data.MapData
 import ru.zakoulov.navigatorx.data.Marker
+import ru.zakoulov.navigatorx.ui.map.MarkerData
 
 sealed class State {
     class Loading() : State()
@@ -14,7 +15,7 @@ sealed class State {
 
 sealed class MapState(
     open val buildings: List<Building>,
-    open val markers: List<Marker>,
+    open val markers: List<MarkerData>,
     open val selectedBuilding: Building,
     open val floor: Int,
     open val departureMarker: Marker?,
@@ -24,7 +25,7 @@ sealed class MapState(
 ) {
     data class Viewing(
         override val buildings: List<Building>,
-        override val markers: List<Marker>,
+        override val markers: List<MarkerData>,
         override val selectedBuilding: Building,
         override val floor: Int,
         override val departureMarker: Marker? = null,
@@ -44,7 +45,7 @@ sealed class MapState(
 
     data class MarkerSelected(
         override val buildings: List<Building>,
-        override val markers: List<Marker>,
+        override val markers: List<MarkerData>,
         override val selectedBuilding: Building,
         override val floor: Int,
         override val departureMarker: Marker? = null,
@@ -65,7 +66,7 @@ sealed class MapState(
 
     data class RoomPicking(
         override val buildings: List<Building>,
-        override val markers: List<Marker>,
+        override val markers: List<MarkerData>,
         override val selectedBuilding: Building,
         override val floor: Int,
         override val departureMarker: Marker? = null,

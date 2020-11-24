@@ -13,6 +13,7 @@ import ru.zakoulov.navigatorx.data.Building
 import ru.zakoulov.navigatorx.data.MapData
 import ru.zakoulov.navigatorx.data.Marker
 import ru.zakoulov.navigatorx.data.realm.RealmRepository
+import ru.zakoulov.navigatorx.ui.map.MarkerData
 
 class MainViewModel(
     private val realmRepository: RealmRepository
@@ -26,7 +27,9 @@ class MainViewModel(
         State.Map(
         mapState = MapState.Viewing(
             buildings = buildings,
-            markers = realmRepository.mapData.value.markers.filter { it.floor == 1 },
+            markers = realmRepository.mapData.value.markers
+                .filter { it.floor == 1 }
+                .map { MarkerData(marker = it) },
             selectedBuilding = buildings[0],
             floor = 1,
             pathInfo = null
@@ -47,7 +50,9 @@ class MainViewModel(
                         State.Map(
                             mapState = MapState.Viewing(
                                 buildings = buildings,
-                                markers = realmRepository.mapData.value.markers.filter { it.floor == 1 },
+                                markers = realmRepository.mapData.value.markers
+                                    .filter { it.floor == 1 }
+                                    .map { MarkerData(marker = it) },
                                 selectedBuilding = buildings[0],
                                 floor = 1,
                                 pathInfo = null
@@ -57,9 +62,9 @@ class MainViewModel(
                     is State.Map -> {
                         currentState.copy(mapState = MapState.Viewing(
                             buildings = currentState.mapState.buildings,
-                            markers = realmRepository.mapData.value.markers.filter {
-                                it.floor == currentState.mapState.floor
-                            },
+                            markers = realmRepository.mapData.value.markers
+                                .filter { it.floor == currentState.mapState.floor }
+                                .map { MarkerData(marker = it) },
                             selectedBuilding = currentState.mapState.selectedBuilding,
                             floor = currentState.mapState.floor,
                             destinationMarker = currentState.mapState.destinationMarker,
@@ -78,7 +83,9 @@ class MainViewModel(
                 if (building != currentState.mapState.selectedBuilding) {
                     _state.value = currentState.copy(mapState = MapState.Viewing(
                         buildings = currentState.mapState.buildings,
-                        markers = realmRepository.mapData.value.markers.filter { it.floor == 1 },
+                        markers = realmRepository.mapData.value.markers
+                            .filter { it.floor == 1 }
+                            .map { MarkerData(marker = it) },
                         selectedBuilding = building,
                         floor = 1,
                     ))
@@ -154,7 +161,13 @@ class MainViewModel(
         if (currentState is State.Map) {
             _state.value = currentState.copy(mapState = MapState.MarkerSelected(
                 buildings = currentState.mapState.buildings,
-                markers = currentState.mapState.markers,
+                markers = currentState.mapState.markers.map {
+                    when {
+                        it.marker.id == marker.id -> it.copy(isSelected = true)
+                        it.isSelected -> it.copy(isSelected = false)
+                        else -> it
+                    }
+                },
                 selectedBuilding = currentState.mapState.selectedBuilding,
                 floor = currentState.mapState.floor,
                 selectedMarker = marker,
@@ -192,9 +205,9 @@ class MainViewModel(
             if (currentFloor != currentState.mapState.selectedBuilding.floors) {
                 transformToViewingState(
                     currentState = currentState,
-                    markers = realmRepository.mapData.value.markers.filter {
-                        it.floor == currentState.mapState.floor + 1
-                    },
+                    markers = realmRepository.mapData.value.markers
+                        .filter { it.floor == currentState.mapState.floor + 1 }
+                        .map { MarkerData(marker = it) },
                     floor = currentState.mapState.floor + 1
                 )
             }
@@ -208,9 +221,9 @@ class MainViewModel(
             if (currentFloor != 1) {
                 transformToViewingState(
                     currentState = currentState,
-                    markers = realmRepository.mapData.value.markers.filter {
-                        it.floor == currentState.mapState.floor - 1
-                    },
+                    markers = realmRepository.mapData.value.markers
+                        .filter { it.floor == currentState.mapState.floor - 1 }
+                        .map { MarkerData(marker = it) },
                     floor = currentState.mapState.floor - 1
                 )
             }
@@ -219,7 +232,7 @@ class MainViewModel(
 
     private fun transformToViewingState(
         currentState: State.Map,
-        markers: List<Marker>? = null,
+        markers: List<MarkerData>? = null,
         selectedBuilding: Building? = null,
         floor: Int? = null,
         departureMarker: Marker? = null,
