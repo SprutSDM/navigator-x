@@ -1,5 +1,9 @@
 package ru.zakoulov.navigatorx.ui.map
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +11,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -37,6 +42,7 @@ import ru.zakoulov.navigatorx.viewmodel.State
 import ru.zakoulov.navigatorx.viewmodel.MainViewModel
 import ru.zakoulov.navigatorx.ui.buildingpicker.BuildingPickerFragment
 import ru.zakoulov.navigatorx.ui.hideKeyboard
+import ru.zakoulov.navigatorx.ui.setTintColor
 import ru.zakoulov.navigatorx.ui.showKeyboardFor
 import ru.zakoulov.navigatorx.viewmodel.Event
 import ru.zakoulov.navigatorx.viewmodel.core.modelWatcher
@@ -84,6 +90,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         super.onViewCreated(view, savedInstanceState)
         markerAdapter = MarkerAdapter(emptyList(), this)
         zoom_layout.adapter = markerAdapter as ZoomMapAdapter<ZoomMapViewHolder>
+
         roomInfoBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_room_info)
         navigationBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_navigation).apply {
             isDraggable = false
@@ -114,26 +121,28 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                     is State.Loading -> Unit
                     is State.Map -> {
                         mapWatcher(it.mapState)
-                        floor_number.text = it.mapState.floor.toString()
-                        up_floor_arrow.setColorFilter(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                if (it.mapState.floor == it.mapState.selectedBuilding.floors) {
-                                    android.R.color.darker_gray
-                                } else {
-                                    android.R.color.black
-                                }
-                            )
+                        val uiFloorNumber = floor_number.text.toString().toInt()
+                        when {
+                            it.mapState.floor < uiFloorNumber -> {
+                                runFloorDownAnimation(it.mapState.floor)
+                            }
+                            it.mapState.floor > uiFloorNumber -> {
+                                runFloorUpAnimation(it.mapState.floor)
+                            }
+                        }
+                        up_floor_arrow.setTintColor(
+                            if (it.mapState.floor == it.mapState.selectedBuilding.floors) {
+                                android.R.color.darker_gray
+                            } else {
+                                android.R.color.black
+                            }
                         )
-                        down_floor_arrow.setColorFilter(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                if (it.mapState.floor == 1) {
-                                    android.R.color.darker_gray
-                                } else {
-                                    android.R.color.black
-                                }
-                            )
+                        down_floor_arrow.setTintColor(
+                            if (it.mapState.floor == 1) {
+                                android.R.color.darker_gray
+                            } else {
+                                android.R.color.black
+                            }
                         )
                         input_departure_room.apply {
                             it.mapState.departureMarker?.let { marker ->
@@ -234,6 +243,34 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         }
         down_floor_arrow.setOnClickListener {
             viewModel.onDownFloorSelected()
+        }
+    }
+
+    private fun runFloorUpAnimation(newFloorNumber: Int) {
+        val animationFloorToDown = AnimatorInflater.loadAnimator(context, R.animator.animator_floor_to_down) as AnimatorSet
+        val animationFloorFromUp = AnimatorInflater.loadAnimator(context, R.animator.animator_floor_from_up) as AnimatorSet
+        animationFloorFromUp.setTarget(floor_number)
+        animationFloorToDown.apply {
+            setTarget(floor_number)
+            addListener(onEnd = {
+                floor_number.text = newFloorNumber.toString()
+                animationFloorFromUp.start()
+            })
+            start()
+        }
+    }
+
+    private fun runFloorDownAnimation(newFloorNumber: Int) {
+        val animationFloorToUp = AnimatorInflater.loadAnimator(context, R.animator.animator_floor_to_up) as AnimatorSet
+        val animationFloorFromDown = AnimatorInflater.loadAnimator(context, R.animator.animator_floor_from_down) as AnimatorSet
+        animationFloorFromDown.setTarget(floor_number)
+        animationFloorToUp.apply {
+            setTarget(floor_number)
+            addListener(onEnd = {
+                floor_number.text = newFloorNumber.toString()
+                animationFloorFromDown.start()
+            })
+            start()
         }
     }
 

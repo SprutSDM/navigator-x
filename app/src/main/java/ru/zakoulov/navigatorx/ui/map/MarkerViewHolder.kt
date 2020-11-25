@@ -52,7 +52,7 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
             visibility = View.VISIBLE
             alpha = 0f
             animate()
-                .setDuration(ANIMATION_TIME)
+                .setDuration(view.resources.getInteger(R.integer.animation_duration).toLong())
                 .alpha(1f)
                 .start()
         }
@@ -65,7 +65,7 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
             visibility = View.VISIBLE
             alpha = 1f
             animate()
-                .setDuration(ANIMATION_TIME)
+                .setDuration(view.resources.getInteger(R.integer.animation_duration).toLong())
                 .alpha(0f)
                 .withEndAction {
                     view.visibility = View.INVISIBLE
@@ -115,7 +115,6 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
     }
 
     companion object {
-        private const val ANIMATION_TIME = 200L
         private const val DEPTH_SHIFT = 0.035f
     }
 }
