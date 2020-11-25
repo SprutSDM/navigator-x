@@ -23,7 +23,6 @@ class MarkerAdapter(
             field = value
             val diffResult = DiffUtil.calculateDiff(diffCallback, false)
             diffResult.dispatchUpdatesTo(markerListUpdateCallback)
-//            notifyDataSetChanged()
         }
 
     override fun createViewHolder(parent: ViewGroup, type: Int): MarkerViewHolder {
@@ -41,6 +40,10 @@ class MarkerAdapter(
     override fun bindViewHolder(viewHolder: MarkerViewHolder, position: Int, type: Int) {
         val markerData = data[position]
         viewHolder.setupViewHolder(markerData)
+    }
+
+    override fun onViewDetached(viewHolder: MarkerViewHolder) {
+        viewHolder.clearViewHolder()
     }
 
     override fun getTypeFor(position: Int): Int {
