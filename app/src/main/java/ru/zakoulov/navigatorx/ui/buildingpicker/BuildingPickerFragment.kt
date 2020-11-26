@@ -50,7 +50,7 @@ class BuildingPickerFragment : BottomSheetDialogFragment(), BuildingPickerCallba
     }
 
     override fun onBuildingPicked(building: Building) {
-        viewModel.selectBuilding(building)
+        viewModel.onBuildingSelected(building)
         dismiss()
     }
 }

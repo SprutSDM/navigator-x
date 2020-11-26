@@ -73,15 +73,15 @@ class MainViewModel(
         }
     }
 
-    fun selectBuilding(building: Building) {
+    fun onBuildingSelected(selectedBuilding: Building) {
         when (val currentState = state.value) {
             is State.Map -> {
-                if (building != currentState.mapState.selectedBuilding) {
+                if (selectedBuilding != currentState.mapState.selectedBuilding) {
                     _state.value = currentState.copy(mapState = MapState.Viewing(
                         markers = realmRepository.mapData.value.markers
-                            .filter { it.floor == 1 }
+                            .filter { it.building == selectedBuilding && it.floor == 1 }
                             .map { MarkerData(marker = it) },
-                        selectedBuilding = building,
+                        selectedBuilding = selectedBuilding,
                         floor = 1,
                     ))
                 }
@@ -222,7 +222,10 @@ class MainViewModel(
                 transformToViewingState(
                     currentState = currentState,
                     markers = realmRepository.mapData.value.markers
-                        .filter { it.floor == currentState.mapState.floor + 1 }
+                        .filter {
+                            it.building == currentState.mapState.selectedBuilding &&
+                                    it.floor == currentState.mapState.floor + 1
+                        }
                         .map { MarkerData(marker = it) },
                     floor = currentState.mapState.floor + 1
                 )
@@ -238,7 +241,10 @@ class MainViewModel(
                 transformToViewingState(
                     currentState = currentState,
                     markers = realmRepository.mapData.value.markers
-                        .filter { it.floor == currentState.mapState.floor - 1 }
+                        .filter {
+                            it.building == currentState.mapState.selectedBuilding &&
+                                    it.floor == currentState.mapState.floor - 1
+                        }
                         .map { MarkerData(marker = it) },
                     floor = currentState.mapState.floor - 1
                 )
