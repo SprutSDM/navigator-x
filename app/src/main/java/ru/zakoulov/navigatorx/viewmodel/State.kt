@@ -14,7 +14,6 @@ sealed class State {
 }
 
 sealed class MapState(
-    open val buildings: List<Building>,
     open val markers: List<MarkerData>,
     open val selectedBuilding: Building,
     open val floor: Int,
@@ -24,7 +23,6 @@ sealed class MapState(
     open val floorPaths: FloorPaths?
 ) {
     data class Viewing(
-        override val buildings: List<Building>,
         override val markers: List<MarkerData>,
         override val selectedBuilding: Building,
         override val floor: Int,
@@ -33,7 +31,6 @@ sealed class MapState(
         override val pathInfo: FullPathInfo? = null,
         override val floorPaths: FloorPaths? = null
     ) : MapState(
-        buildings = buildings,
         markers = markers,
         selectedBuilding = selectedBuilding,
         floor = floor,
@@ -44,7 +41,6 @@ sealed class MapState(
     )
 
     data class MarkerSelected(
-        override val buildings: List<Building>,
         override val markers: List<MarkerData>,
         override val selectedBuilding: Building,
         override val floor: Int,
@@ -54,7 +50,6 @@ sealed class MapState(
         override val floorPaths: FloorPaths? = null,
         val selectedMarker: Marker
     ) : MapState(
-        buildings = buildings,
         markers = markers,
         selectedBuilding = selectedBuilding,
         floor = floor,
@@ -65,7 +60,6 @@ sealed class MapState(
     )
 
     data class RoomPicking(
-        override val buildings: List<Building>,
         override val markers: List<MarkerData>,
         override val selectedBuilding: Building,
         override val floor: Int,
@@ -74,7 +68,6 @@ sealed class MapState(
         override val pathInfo: FullPathInfo? = null,
         override val floorPaths: FloorPaths? = null
     ) : MapState(
-        buildings = buildings,
         markers = markers,
         selectedBuilding = selectedBuilding,
         floor = floor,

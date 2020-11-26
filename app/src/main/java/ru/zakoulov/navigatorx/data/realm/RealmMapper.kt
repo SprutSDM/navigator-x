@@ -19,49 +19,58 @@ class RealmMapper {
                 floor = it.floor
             )
             pathConnections[id] = it.connectedIDs
-            when (it.typeEnum) {
-                PointTypeEnum.PATH -> Unit //TODO
-                PointTypeEnum.ROOM -> {
-                    markers.add(Marker.Room(
-                        id = it._id.toString(),
-                        scaleVisible = it.scaleVisible.toFloat(),
-                        positionX = it.positionX.toFloat(),
-                        positionY = it.positionY.toFloat(),
-                        corpus = it.korpus,
-                        building = Building(id = it.building, title = "", address = "", floors = 6),
-                        floor = it.floor,
-                        roomNumber = it.labelText,
-                        roomTitle = it.info
-                    ))
+            val building = Building.values().find { building -> building.id == it.building }
+            if (building != null) {
+                when (it.typeEnum) {
+                    PointTypeEnum.PATH -> Unit //TODO
+                    PointTypeEnum.ROOM -> {
+                        markers.add(
+                            Marker.Room(
+                                id = it._id.toString(),
+                                scaleVisible = it.scaleVisible.toFloat(),
+                                positionX = it.positionX.toFloat(),
+                                positionY = it.positionY.toFloat(),
+                                corpus = it.korpus,
+                                building = building,
+                                floor = it.floor,
+                                roomNumber = it.labelText,
+                                roomTitle = it.info
+                            )
+                        )
+                    }
+                    PointTypeEnum.MESSAGE -> Unit //TODO
+                    PointTypeEnum.ICON -> Unit //TODO
+                    PointTypeEnum.OTHER -> {
+                        markers.add(
+                            Marker.Room(
+                                id = it._id.toString(),
+                                scaleVisible = it.scaleVisible.toFloat(),
+                                positionX = it.positionX.toFloat(),
+                                positionY = it.positionY.toFloat(),
+                                corpus = it.korpus,
+                                building = building,
+                                floor = it.floor,
+                                roomNumber = it.labelText,
+                                roomTitle = it.info
+                            )
+                        )
+                    }
+                    PointTypeEnum.STAIRS_UP, PointTypeEnum.STAIRS_DOWN -> {
+                        markers.add(
+                            Marker.Stairs(
+                                id = it._id.toString(),
+                                scaleVisible = it.scaleVisible.toFloat(),
+                                positionX = it.positionX.toFloat(),
+                                positionY = it.positionY.toFloat(),
+                                corpus = it.korpus,
+                                building = building,
+                                floor = it.floor,
+                                isUp = it.typeEnum == PointTypeEnum.STAIRS_UP
+                            )
+                        )
+                    }
+                    PointTypeEnum.ELEVATOR -> Unit //TODO
                 }
-                PointTypeEnum.MESSAGE -> Unit //TODO
-                PointTypeEnum.ICON -> Unit //TODO
-                PointTypeEnum.OTHER -> {
-                    markers.add(Marker.Room(
-                        id = it._id.toString(),
-                        scaleVisible = it.scaleVisible.toFloat(),
-                        positionX = it.positionX.toFloat(),
-                        positionY = it.positionY.toFloat(),
-                        corpus = it.korpus,
-                        building = Building(id = it.building, title = "", address = "", floors = 6),
-                        floor = it.floor,
-                        roomNumber = it.labelText,
-                        roomTitle = it.info
-                    ))
-                }
-                PointTypeEnum.STAIRS_UP, PointTypeEnum.STAIRS_DOWN -> {
-                    markers.add(Marker.Stairs(
-                        id = it._id.toString(),
-                        scaleVisible = it.scaleVisible.toFloat(),
-                        positionX = it.positionX.toFloat(),
-                        positionY = it.positionY.toFloat(),
-                        corpus = it.korpus,
-                        building = Building(id = it.building, title = "", address = "", floors = 6),
-                        floor = it.floor,
-                        isUp = it.typeEnum == PointTypeEnum.STAIRS_UP
-                    ))
-                }
-                PointTypeEnum.ELEVATOR -> Unit //TODO
             }
         }
         return MapData(markers, pathDots, pathConnections)

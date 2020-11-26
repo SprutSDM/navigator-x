@@ -42,7 +42,7 @@ class BuildingPickerFragment : BottomSheetDialogFragment(), BuildingPickerCallba
         lifecycleScope.launch {
             viewModel.state.collect {
                 when (it) {
-                    is State.Map -> buildingAdapter.buildings = it.mapState.buildings
+                    is State.Map -> buildingAdapter.buildings = Building.values().toList()
                     else -> dismiss()
                 }
             }

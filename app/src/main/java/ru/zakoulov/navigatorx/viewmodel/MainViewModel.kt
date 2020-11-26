@@ -25,11 +25,10 @@ class MainViewModel(
     private val _state: MutableStateFlow<State> = MutableStateFlow(
         State.Map(
         mapState = MapState.Viewing(
-            buildings = buildings,
             markers = realmRepository.mapData.value.markers
                 .filter { it.floor == 1 }
                 .map { MarkerData(marker = it) },
-            selectedBuilding = buildings[0],
+            selectedBuilding = Building.MAIN_CORPUS,
             floor = 1,
             pathInfo = null
         )
@@ -48,11 +47,10 @@ class MainViewModel(
                     is State.Loading -> {
                         State.Map(
                             mapState = MapState.Viewing(
-                                buildings = buildings,
                                 markers = realmRepository.mapData.value.markers
                                     .filter { it.floor == 1 }
                                     .map { MarkerData(marker = it) },
-                                selectedBuilding = buildings[0],
+                                selectedBuilding = Building.MAIN_CORPUS,
                                 floor = 1,
                                 pathInfo = null
                             )
@@ -60,7 +58,6 @@ class MainViewModel(
                     }
                     is State.Map -> {
                         currentState.copy(mapState = MapState.Viewing(
-                            buildings = currentState.mapState.buildings,
                             markers = realmRepository.mapData.value.markers
                                 .filter { it.floor == currentState.mapState.floor }
                                 .map { MarkerData(marker = it) },
@@ -81,7 +78,6 @@ class MainViewModel(
             is State.Map -> {
                 if (building != currentState.mapState.selectedBuilding) {
                     _state.value = currentState.copy(mapState = MapState.Viewing(
-                        buildings = currentState.mapState.buildings,
                         markers = realmRepository.mapData.value.markers
                             .filter { it.floor == 1 }
                             .map { MarkerData(marker = it) },
@@ -151,7 +147,6 @@ class MainViewModel(
             null
         }
         _state.value = currentState.copy(mapState = MapState.Viewing(
-            buildings = currentState.mapState.buildings,
             selectedBuilding = currentState.mapState.selectedBuilding,
             floor = currentState.mapState.floor,
             markers = currentState.mapState.markers.map {
@@ -182,7 +177,6 @@ class MainViewModel(
         val currentState = state.value
         if (currentState is State.Map) {
             _state.value = currentState.copy(mapState = MapState.MarkerSelected(
-                buildings = currentState.mapState.buildings,
                 markers = currentState.mapState.markers.map {
                     when {
                         it.marker.id == marker.id -> it.copy(isSelected = true)
@@ -262,7 +256,6 @@ class MainViewModel(
         pathInfo: FullPathInfo? = null
     ) {
         _state.value = currentState.copy(mapState = MapState.Viewing(
-            buildings = currentState.mapState.buildings,
             markers = (markers ?: currentState.mapState.markers).map {
                 if (it.isSelected) it.copy(isSelected = false) else it
             },
@@ -279,7 +272,6 @@ class MainViewModel(
         currentState: State.Map
     ) {
         _state.value = currentState.copy(mapState = MapState.RoomPicking(
-            buildings = currentState.mapState.buildings,
             markers = currentState.mapState.markers,
             selectedBuilding = currentState.mapState.selectedBuilding,
             floor = currentState.mapState.floor,
@@ -291,14 +283,6 @@ class MainViewModel(
     }
 
     companion object {
-        private val buildings = listOf(
-            Building(id = 0, title = "Главный корпус", address = "Кронверкский проспект, д. 49", floors = 5),
-            Building(id = 1, title = "Корпус на Ломоносово", address = "Улица Ломоносова, д. 9", floors = 5),
-            Building(id = 2, title = "Корпус на Гривцова", address = "Переулок Гривцова, д. 14", floors = 5),
-            Building(id = 3, title = "Корпус на Чайковского", address = "Улица Чайковского, д. 11/2", floors = 5),
-            Building(id = 4, title = "Корпус на Биржевой линии", address = "Биржевая линия, д. 14", floors = 5)
-        )
-
         private const val TAG = "MainViewModel"
     }
 }
