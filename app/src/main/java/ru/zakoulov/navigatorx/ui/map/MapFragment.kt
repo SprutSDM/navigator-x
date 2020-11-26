@@ -81,6 +81,11 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                 zoom_layout.animatePaths()
             }
         }
+        (MapState::floor or MapState::selectedBuilding) {
+            it.selectedBuilding.floorsBitmapRes.getOrNull(it.floor - 1)?.also { backgroundRes ->
+                zoom_layout.setBackground(backgroundRes)
+            }
+        }
         watch(MapState::markers) { markers ->
             markerAdapter.data = markers
         }
