@@ -25,7 +25,9 @@ class RealmRepository(
         val user = app.currentUser()
         if (user == null) {
             app.loginAsync(Credentials.anonymous()) {
-                onAuth(app.currentUser()!!)
+                app.currentUser()?.let { currentUser ->
+                    onAuth(currentUser)
+                }
             }
         } else {
             onAuth(user)
