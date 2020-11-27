@@ -13,13 +13,16 @@ enum class Building(
         id = 0,
         title = "Главный корпус",
         address = "Кронверкский проспект, д. 49",
-        floors = 5,
+        floors = 8,
         floorsBitmapRes = listOf(
-            R.drawable.lomo1,
-            R.drawable.lomo1,
-            R.drawable.lomo1,
-            R.drawable.lomo1,
-            R.drawable.lomo1,
+            R.drawable.kronv_1,
+            R.drawable.kronv_2,
+            R.drawable.kronv_3,
+            R.drawable.kronv_4,
+            R.drawable.kronv_5,
+            R.drawable.kronv_6,
+            R.drawable.kronv_7,
+            R.drawable.kronv_8,
         )
     ),
     LOMO(

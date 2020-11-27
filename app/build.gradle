@@ -25,8 +25,11 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
         }
     }
 }
@@ -52,8 +55,10 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
 
     implementation "com.google.android.material:material:$materialVersion"
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
 
     annotationProcessor "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
 
     testImplementation "junit:junit:$junitVersion"
 

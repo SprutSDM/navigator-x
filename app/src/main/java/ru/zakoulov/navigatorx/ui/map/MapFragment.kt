@@ -5,6 +5,8 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,7 +18,17 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomViewTarget
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.ViewTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.otaliastudios.zoom.ZoomLayout
+import com.otaliastudios.zoom.ZoomMap
 import com.otaliastudios.zoom.ZoomMapAdapter
 import com.otaliastudios.zoom.ZoomMapViewHolder
 import kotlinx.android.synthetic.main.fragment_map.building_title
@@ -83,7 +95,22 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         }
         (MapState::floor or MapState::selectedBuilding) {
             it.selectedBuilding.floorsBitmapRes.getOrNull(it.floor - 1)?.also { backgroundRes ->
-                zoom_layout.setBackground(backgroundRes)
+                val target = object : CustomViewTarget<ZoomMap, Bitmap>(zoom_layout) {
+                    override fun onLoadFailed(errorDrawable: Drawable?) = Unit
+
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        zoom_layout.setBackground(resource)
+                    }
+
+                    override fun onResourceCleared(placeholder: Drawable?) = Unit
+                }
+                Glide
+                    .with(requireContext())
+                    .asBitmap()
+                    .load(backgroundRes)
+                    .dontAnimate()
+                    .apply(RequestOptions().override(2048, 2048))
+                    .into(target)
             }
         }
         watch(MapState::markers) { markers ->
