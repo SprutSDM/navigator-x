@@ -81,8 +81,8 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
 
     lateinit var markerAdapter: MarkerAdapter
 
-    val mapWatcher = modelWatcher<MapState> {
-        watch(MapState::floorPaths) { floorPaths ->
+    val mapWatcher = modelWatcher<State.Map> {
+        watch(State.Map::floorPaths) { floorPaths ->
             if (floorPaths == null) {
                 zoom_layout.resetPaths()
             } else {
@@ -93,7 +93,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                 zoom_layout.animatePaths()
             }
         }
-        (MapState::floor or MapState::selectedBuilding) {
+        (State.Map::floor or State.Map::selectedBuilding) {
             it.selectedBuilding.floorsBitmapRes.getOrNull(it.floor - 1)?.also { backgroundRes ->
                 val target = object : CustomViewTarget<ZoomMap, Bitmap>(zoom_layout) {
                     override fun onLoadFailed(errorDrawable: Drawable?) = Unit
@@ -113,7 +113,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                     .into(target)
             }
         }
-        watch(MapState::markers) { markers ->
+        watch(State.Map::markers) { markers ->
             markerAdapter.data = markers
         }
     }
@@ -152,32 +152,32 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                 when (it) {
                     is State.Loading -> Unit
                     is State.Map -> {
-                        mapWatcher(it.mapState)
+                        mapWatcher(it)
                         val uiFloorNumber = floor_number.text.toString().toInt()
                         when {
-                            it.mapState.floor < uiFloorNumber -> {
-                                runFloorDownAnimation(it.mapState.floor)
+                            it.floor < uiFloorNumber -> {
+                                runFloorDownAnimation(it.floor)
                             }
-                            it.mapState.floor > uiFloorNumber -> {
-                                runFloorUpAnimation(it.mapState.floor)
+                            it.floor > uiFloorNumber -> {
+                                runFloorUpAnimation(it.floor)
                             }
                         }
                         up_floor_arrow.setTintColor(
-                            if (it.mapState.floor == it.mapState.selectedBuilding.floors) {
+                            if (it.floor == it.selectedBuilding.floors) {
                                 android.R.color.darker_gray
                             } else {
                                 android.R.color.black
                             }
                         )
                         down_floor_arrow.setTintColor(
-                            if (it.mapState.floor == 1) {
+                            if (it.floor == 1) {
                                 android.R.color.darker_gray
                             } else {
                                 android.R.color.black
                             }
                         )
                         input_departure_room.apply {
-                            it.mapState.departureMarker?.let { marker ->
+                            it.departureMarker?.let { marker ->
                                 text = when (marker) {
                                     is Marker.Room -> marker.roomNumber
                                     else -> ""
@@ -189,7 +189,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                             }
                         }
                         input_destination_room.apply {
-                            it.mapState.destinationMarker?.let { marker ->
+                            it.destinationMarker?.let { marker ->
                                 text = when (marker) {
                                     is Marker.Room -> marker.roomNumber
                                     else -> ""
@@ -207,7 +207,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                                 }
                                 roomInfoBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                                building_title.text = mapState.selectedBuilding.title
+                                building_title.text = it.selectedBuilding.title
                             }
                             is MapState.MarkerSelected -> {
                                 navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN

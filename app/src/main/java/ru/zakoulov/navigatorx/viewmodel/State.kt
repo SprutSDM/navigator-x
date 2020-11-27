@@ -9,71 +9,23 @@ sealed class State {
     class Loading() : State()
 
     data class Map(
-        val mapState: MapState
+        val mapState: MapState,
+        val markers: List<MarkerData>,
+        val selectedBuilding: Building,
+        val floor: Int,
+        val departureMarker: Marker?,
+        val destinationMarker: Marker?,
+        val pathInfo: FullPathInfo?,
+        val floorPaths: FloorPaths?
     ) : State()
 }
 
-sealed class MapState(
-    open val markers: List<MarkerData>,
-    open val selectedBuilding: Building,
-    open val floor: Int,
-    open val departureMarker: Marker?,
-    open val destinationMarker: Marker?,
-    open val pathInfo: FullPathInfo?,
-    open val floorPaths: FloorPaths?
-) {
-    data class Viewing(
-        override val markers: List<MarkerData>,
-        override val selectedBuilding: Building,
-        override val floor: Int,
-        override val departureMarker: Marker? = null,
-        override val destinationMarker: Marker? = null,
-        override val pathInfo: FullPathInfo? = null,
-        override val floorPaths: FloorPaths? = null
-    ) : MapState(
-        markers = markers,
-        selectedBuilding = selectedBuilding,
-        floor = floor,
-        departureMarker = departureMarker,
-        destinationMarker = destinationMarker,
-        pathInfo = pathInfo,
-        floorPaths = floorPaths
-    )
+sealed class MapState {
+    object Viewing : MapState()
 
     data class MarkerSelected(
-        override val markers: List<MarkerData>,
-        override val selectedBuilding: Building,
-        override val floor: Int,
-        override val departureMarker: Marker? = null,
-        override val destinationMarker: Marker? = null,
-        override val pathInfo: FullPathInfo? = null,
-        override val floorPaths: FloorPaths? = null,
         val selectedMarker: Marker
-    ) : MapState(
-        markers = markers,
-        selectedBuilding = selectedBuilding,
-        floor = floor,
-        departureMarker = departureMarker,
-        destinationMarker = destinationMarker,
-        pathInfo = pathInfo,
-        floorPaths = floorPaths
-    )
+    ) : MapState()
 
-    data class RoomPicking(
-        override val markers: List<MarkerData>,
-        override val selectedBuilding: Building,
-        override val floor: Int,
-        override val departureMarker: Marker? = null,
-        override val destinationMarker: Marker? = null,
-        override val pathInfo: FullPathInfo? = null,
-        override val floorPaths: FloorPaths? = null
-    ) : MapState(
-        markers = markers,
-        selectedBuilding = selectedBuilding,
-        floor = floor,
-        departureMarker = departureMarker,
-        destinationMarker = destinationMarker,
-        pathInfo = pathInfo,
-        floorPaths = floorPaths
-    )
+    object RoomPicking : MapState()
 }
