@@ -1,4 +1,4 @@
-package ru.zakoulov.navigatorx.ui.map
+package ru.zakoulov.navigatorx.ui.map.markers
 
 import androidx.recyclerview.widget.DiffUtil
 

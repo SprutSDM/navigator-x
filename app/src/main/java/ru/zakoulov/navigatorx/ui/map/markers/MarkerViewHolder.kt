@@ -1,5 +1,6 @@
-package ru.zakoulov.navigatorx.ui.map
+package ru.zakoulov.navigatorx.ui.map.markers
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -21,6 +22,7 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
         positionX = markerData.marker.positionX
         positionY = markerData.marker.positionY
         visibilityRate = markerData.marker.scaleVisible
+        Log.d("MarkerViewHolder", "setupViewHolder: $visibilityRate")
         // If it's the same marker, we don't have to make appear animation
         if (markerId != markerData.marker.id) {
             view.visibility = View.INVISIBLE
@@ -115,6 +117,6 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
     }
 
     companion object {
-        private const val DEPTH_SHIFT = 0.035f
+        private const val DEPTH_SHIFT = 0.02f
     }
 }

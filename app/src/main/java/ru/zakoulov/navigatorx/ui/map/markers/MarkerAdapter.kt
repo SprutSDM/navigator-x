@@ -1,4 +1,4 @@
-package ru.zakoulov.navigatorx.ui.map
+package ru.zakoulov.navigatorx.ui.map.markers
 
 import android.view.LayoutInflater
 import android.view.View

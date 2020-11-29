@@ -1,9 +1,8 @@
 package ru.zakoulov.navigatorx.viewmodel
 
 import ru.zakoulov.navigatorx.data.Building
-import ru.zakoulov.navigatorx.data.MapData
 import ru.zakoulov.navigatorx.data.Marker
-import ru.zakoulov.navigatorx.ui.map.MarkerData
+import ru.zakoulov.navigatorx.ui.map.markers.MarkerData
 
 sealed class State {
     class Loading() : State()
@@ -27,5 +26,14 @@ sealed class MapState {
         val selectedMarker: Marker
     ) : MapState()
 
-    object RoomPicking : MapState()
+    data class RoomPicking(
+        val pickType: PickType,
+        val filteredRooms: List<Marker>
+    ) : MapState() {
+
+        enum class PickType {
+            PICK_DEPARTURE,
+            PICK_DESTINATION
+        }
+    }
 }

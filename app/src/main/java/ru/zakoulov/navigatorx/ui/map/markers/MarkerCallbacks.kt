@@ -1,4 +1,4 @@
-package ru.zakoulov.navigatorx.ui.map
+package ru.zakoulov.navigatorx.ui.map.markers
 
 import ru.zakoulov.navigatorx.data.Marker
 

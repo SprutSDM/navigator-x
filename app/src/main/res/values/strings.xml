@@ -9,4 +9,5 @@
     <string name="path_was_not_found">Путь не найден</string>
 
     <string name="realm_app_id">navigator-unscj</string>
+    <string name="could_not_find_rooms">Не удалось найти аудитории</string>
 </resources>

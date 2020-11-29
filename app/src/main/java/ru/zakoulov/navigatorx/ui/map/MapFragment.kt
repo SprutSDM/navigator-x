@@ -2,8 +2,6 @@ package ru.zakoulov.navigatorx.ui.map
 
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -15,19 +13,16 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomViewTarget
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.otaliastudios.zoom.ZoomLayout
 import com.otaliastudios.zoom.ZoomMap
 import com.otaliastudios.zoom.ZoomMapAdapter
 import com.otaliastudios.zoom.ZoomMapViewHolder
@@ -44,7 +39,9 @@ import kotlinx.android.synthetic.main.room_info_bottom_sheet.bottom_sheet_room_i
 import kotlinx.android.synthetic.main.room_info_bottom_sheet.button_select_as_departure
 import kotlinx.android.synthetic.main.room_info_bottom_sheet.button_select_as_destination
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.bottom_sheet_room_picker_info
+import kotlinx.android.synthetic.main.room_picker_bottom_sheet.could_not_find_rooms
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.input_room
+import kotlinx.android.synthetic.main.room_picker_bottom_sheet.room_picker_recycler_view
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.R
@@ -54,12 +51,16 @@ import ru.zakoulov.navigatorx.viewmodel.State
 import ru.zakoulov.navigatorx.viewmodel.MainViewModel
 import ru.zakoulov.navigatorx.ui.buildingpicker.BuildingPickerFragment
 import ru.zakoulov.navigatorx.ui.hideKeyboard
+import ru.zakoulov.navigatorx.ui.map.markers.MarkerAdapter
+import ru.zakoulov.navigatorx.ui.map.markers.MarkerCallbacks
+import ru.zakoulov.navigatorx.ui.map.roompicker.RoomPickerAdapter
+import ru.zakoulov.navigatorx.ui.map.roompicker.RoomPickerCallbacks
 import ru.zakoulov.navigatorx.ui.setTintColor
 import ru.zakoulov.navigatorx.ui.showKeyboardFor
 import ru.zakoulov.navigatorx.viewmodel.Event
 import ru.zakoulov.navigatorx.viewmodel.core.modelWatcher
 
-class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
+class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPickerCallbacks {
 
     private val viewModel: MainViewModel by activityViewModels()
 
@@ -80,6 +81,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
 //    private val map = Map(rawMarkers)
 
     lateinit var markerAdapter: MarkerAdapter
+    lateinit var roomPickerAdapter: RoomPickerAdapter
 
     val mapWatcher = modelWatcher<State.Map> {
         watch(State.Map::floorPaths) { floorPaths ->
@@ -122,6 +124,12 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         super.onViewCreated(view, savedInstanceState)
         markerAdapter = MarkerAdapter(emptyList(), this)
         zoom_layout.adapter = markerAdapter as ZoomMapAdapter<ZoomMapViewHolder>
+        roomPickerAdapter = RoomPickerAdapter(emptyList(), this)
+        val roomPickerLayoutManager = LinearLayoutManager(requireContext())
+        room_picker_recycler_view.apply {
+            adapter = roomPickerAdapter
+            layoutManager = roomPickerLayoutManager
+        }
 
         roomInfoBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_room_info)
         navigationBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_navigation).apply {
@@ -208,6 +216,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                                 roomInfoBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 building_title.text = it.selectedBuilding.title
+                                hideKeyboard()
                             }
                             is MapState.MarkerSelected -> {
                                 navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -219,10 +228,17 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
                                     is Marker.Room -> "Ауд. ${mapState.selectedMarker.roomNumber}"
                                     else -> ""
                                 }
+                                hideKeyboard()
                             }
                             is MapState.RoomPicking -> {
                                 navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                                roomPickerAdapter.markers = mapState.filteredRooms
+                                could_not_find_rooms.visibility = if (mapState.filteredRooms.isEmpty()) {
+                                    View.VISIBLE
+                                } else {
+                                    View.GONE
+                                }
                                 showKeyboardFor(input_room)
                             }
                         }
@@ -252,10 +268,10 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         })
 
         input_departure_room.setOnClickListener {
-            viewModel.pickDepartureRoom()
+            viewModel.openDepartureRoomPicker()
         }
         input_destination_room.setOnClickListener {
-            viewModel.pickDestinationRoom()
+            viewModel.openDestinationRoomPicker()
         }
 
         button_select_as_destination.setOnClickListener {
@@ -263,6 +279,9 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         }
         button_select_as_departure.setOnClickListener {
             viewModel.onRoomSelectedAsDeparture()
+        }
+        input_room.addTextChangedListener {
+            viewModel.onRoomPickerTextUpdated(it?.toString() ?: "")
         }
 
         toolbar.setOnClickListener {
@@ -310,6 +329,11 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks {
         when (marker) {
             is Marker.Room -> viewModel.onMarkerSelected(marker)
         }
+    }
+
+    override fun onRoomPicked(marker: Marker) {
+        Log.d(TAG, "onRoomPicked: marker: ${marker}")
+        viewModel.onRoomPickerSelected(marker)
     }
 
     companion object {

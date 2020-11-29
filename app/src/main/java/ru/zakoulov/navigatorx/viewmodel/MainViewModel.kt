@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.data.Building
 import ru.zakoulov.navigatorx.data.Marker
 import ru.zakoulov.navigatorx.data.realm.RealmRepository
-import ru.zakoulov.navigatorx.ui.map.MarkerData
+import ru.zakoulov.navigatorx.ui.map.markers.MarkerData
 
 class MainViewModel(
     private val realmRepository: RealmRepository
@@ -91,17 +91,64 @@ class MainViewModel(
         }
     }
 
-    fun pickDepartureRoom() {
+    fun openDepartureRoomPicker() {
         val currentState = state.value
         if (currentState is State.Map) {
-            _state.value = currentState.copy(mapState = MapState.RoomPicking)
+            _state.value = currentState.copy(
+                mapState = MapState.RoomPicking(
+                    pickType = MapState.RoomPicking.PickType.PICK_DEPARTURE,
+                    filteredRooms = realmRepository.mapData.value.markers.filter {
+                        it.building.id == currentState.selectedBuilding.id
+                    }
+                )
+            )
         }
     }
 
-    fun pickDestinationRoom() {
+    fun openDestinationRoomPicker() {
         val currentState = state.value
         if (currentState is State.Map) {
-            _state.value = currentState.copy(mapState = MapState.RoomPicking)
+            _state.value = currentState.copy(
+                mapState = MapState.RoomPicking(
+                    pickType = MapState.RoomPicking.PickType.PICK_DESTINATION,
+                    filteredRooms = realmRepository.mapData.value.markers.filter {
+                        it.building.id == currentState.selectedBuilding.id
+                    }
+                )
+            )
+        }
+    }
+
+    fun onRoomPickerTextUpdated(matchText: String) {
+        val currentState = state.value
+        if (currentState is State.Map && currentState.mapState is MapState.RoomPicking) {
+            _state.value = currentState.copy(
+                mapState = currentState.mapState.copy(
+                    filteredRooms = realmRepository.mapData.value.markers.filter {
+                        it.building.id == currentState.selectedBuilding.id && (
+                                matchText.isEmpty() || it is Marker.Room && it.roomNumber.contains(matchText))
+                    }
+                )
+            )
+        }
+    }
+
+    fun onRoomPickerSelected(marker: Marker) {
+        val currentState = state.value
+        if (currentState is State.Map && currentState.mapState is MapState.RoomPicking) {
+            if (currentState.mapState.pickType == MapState.RoomPicking.PickType.PICK_DEPARTURE) {
+                findPathAndUpdateState(
+                    currentState = currentState,
+                    destinationMarker = currentState.destinationMarker,
+                    departureMarker = marker
+                )
+            } else {
+                findPathAndUpdateState(
+                    currentState = currentState,
+                    destinationMarker = marker,
+                    departureMarker = currentState.departureMarker
+                )
+            }
         }
     }
 
