@@ -198,7 +198,10 @@ class MainViewModel(
         _state.value = currentState.copy(
             mapState = MapState.Viewing,
             markers = currentState.markers.map {
-                if (it.isSelected) it.copy(isSelected = false) else it
+                if (it.isSelected) it.copy(
+                    isSelected = false,
+                    forceVisible = it.marker.id == departureMarker?.id || it.marker.id == destinationMarker?.id
+                ) else it
             },
             departureMarker = departureMarker,
             destinationMarker = destinationMarker,

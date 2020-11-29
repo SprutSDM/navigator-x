@@ -17,16 +17,22 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
     private var visibilityRate: Float = 0f
     private var isVisible: Boolean = false
     private var markerId: String? = null
+    private var forceVisible: Boolean = false
 
     open fun setupViewHolder(markerData: MarkerData) {
         positionX = markerData.marker.positionX
         positionY = markerData.marker.positionY
         visibilityRate = markerData.marker.scaleVisible
+        forceVisible = markerData.forceVisible
         Log.d("MarkerViewHolder", "setupViewHolder: $visibilityRate")
         // If it's the same marker, we don't have to make appear animation
         if (markerId != markerData.marker.id) {
             view.visibility = View.INVISIBLE
             isVisible = false
+        }
+        if (markerData.forceVisible) {
+            view.visibility = View.VISIBLE
+            isVisible = true
         }
         markerId = markerData.marker.id
         view.setOnClickListener {
@@ -42,6 +48,12 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
     override fun getPositionY() = positionY
 
     override fun onVisibilityRateChanged(rate: Float) {
+        if (forceVisible) {
+            if (!isVisible) {
+                showView()
+            }
+            return
+        }
         when {
             !isVisible && rate >= visibilityRate -> showView()
             isVisible && rate < visibilityRate - DEPTH_SHIFT -> hideView()

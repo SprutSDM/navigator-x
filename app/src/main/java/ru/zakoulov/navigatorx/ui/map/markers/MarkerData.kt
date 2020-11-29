@@ -5,5 +5,6 @@ import ru.zakoulov.navigatorx.data.Marker
 data class MarkerData(
     val marker: Marker,
     val isSelected: Boolean = false,
+    val forceVisible: Boolean = false,
     val additionalText: String? = null
 )
