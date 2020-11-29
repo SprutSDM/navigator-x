@@ -152,6 +152,23 @@ class MainViewModel(
         }
     }
 
+    fun onPickerCanceled() {
+        val currentState = state.value
+        if (currentState is State.Map && currentState.mapState is MapState.RoomPicking) {
+            _state.value = if (currentState.mapState.pickType == MapState.RoomPicking.PickType.PICK_DESTINATION) {
+                currentState.copy(
+                    mapState = MapState.Viewing,
+                    destinationMarker = null
+                )
+            } else {
+                currentState.copy(
+                    mapState = MapState.Viewing,
+                    departureMarker = null
+                )
+            }
+        }
+    }
+
     fun onRoomSelectedAsDeparture() {
         val currentState = state.value
         if (currentState is State.Map && currentState.mapState is MapState.MarkerSelected) {

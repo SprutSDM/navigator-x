@@ -41,6 +41,7 @@ import kotlinx.android.synthetic.main.room_info_bottom_sheet.button_select_as_de
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.bottom_sheet_room_picker_info
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.could_not_find_rooms
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.input_room
+import kotlinx.android.synthetic.main.room_picker_bottom_sheet.picker_cancel_button
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.room_picker_recycler_view
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -282,6 +283,9 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
         }
         input_room.addTextChangedListener {
             viewModel.onRoomPickerTextUpdated(it?.toString() ?: "")
+        }
+        picker_cancel_button.setOnClickListener {
+            viewModel.onPickerCanceled()
         }
 
         toolbar.setOnClickListener {

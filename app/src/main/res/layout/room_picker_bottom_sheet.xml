@@ -30,24 +30,17 @@
         android:imeOptions="actionSearch"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/search_image"
-        app:layout_constraintEnd_toStartOf="@id/cancel_button"/>
+        app:layout_constraintEnd_toStartOf="@id/picker_cancel_button"/>
 
-    <TextView
-        android:id="@+id/cancel_button"
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:id="@+id/picker_cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
         android:text="@string/cancel"
         android:textColor="@color/colorPrimary"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="4dp"
-        android:paddingTop="12dp"
         android:gravity="center_vertical"
-        android:textSize="16sp"
         android:fontFamily="sans-serif-medium"
-        android:clickable="true"
-        android:focusable="true"
         app:layout_constraintTop_toTopOf="@id/input_room"
         app:layout_constraintBottom_toBottomOf="@id/input_room"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -58,7 +51,7 @@
         android:layout_height="wrap_content"
         app:barrierMargin="8dp"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="search_image,input_room,cancel_button"/>
+        app:constraint_referenced_ids="search_image,input_room,picker_cancel_button" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/room_picker_recycler_view"
