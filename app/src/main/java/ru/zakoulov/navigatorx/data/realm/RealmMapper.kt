@@ -70,6 +70,43 @@ class RealmMapper {
                         )
                     }
                     PointTypeEnum.ELEVATOR -> Unit //TODO
+                    PointTypeEnum.ENTRANCE, PointTypeEnum.MAIN_ENTRANCE -> {
+                        markers.add(
+                            Marker.Entrance(
+                                id = it._id.toString(),
+                                scaleVisible = it.scaleVisible.toFloat(),
+                                positionX = it.positionX.toFloat(),
+                                positionY = it.positionY.toFloat(),
+                                corpus = it.korpus,
+                                building = building,
+                                floor = it.floor,
+                                type = if (it.typeEnum == PointTypeEnum.ENTRANCE) {
+                                    Marker.Entrance.Type.COMMON
+                                } else {
+                                    Marker.Entrance.Type.MAIN
+                                },
+                                labelText = it.labelText
+                            )
+                        )
+                    }
+                    PointTypeEnum.TOILET, PointTypeEnum.TOILET_FEMALE, PointTypeEnum.TOILET_MALE -> {
+                        markers.add(
+                            Marker.Toilet(
+                                id = it._id.toString(),
+                                scaleVisible = it.scaleVisible.toFloat(),
+                                positionX = it.positionX.toFloat(),
+                                positionY = it.positionY.toFloat(),
+                                corpus = it.korpus,
+                                building = building,
+                                floor = it.floor,
+                                type = when (it.typeEnum) {
+                                    PointTypeEnum.TOILET_MALE -> Marker.Toilet.Type.MALE
+                                    PointTypeEnum.TOILET_FEMALE -> Marker.Toilet.Type.FEMALE
+                                    else -> Marker.Toilet.Type.COMBINED
+                                }
+                            )
+                        )
+                    }
                 }
             }
         }

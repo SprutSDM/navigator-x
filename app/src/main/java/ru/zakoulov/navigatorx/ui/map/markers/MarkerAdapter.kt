@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListUpdateCallback
 import com.otaliastudios.zoom.ZoomMapAdapter
 import ru.zakoulov.navigatorx.R
 import ru.zakoulov.navigatorx.data.Marker
+import java.lang.IllegalStateException
 
 class MarkerAdapter(
     data: List<MarkerData>,
@@ -31,9 +32,11 @@ class MarkerAdapter(
         }
 
         return when (type) {
-            TYPE_ROOM -> MarkerViewHolder.Room(inflateView(R.layout.marker_room), callbacks)
-            TYPE_STAIRS -> MarkerViewHolder.Stairs(inflateView(R.layout.marker_stairs), callbacks)
-            else -> MarkerViewHolder.Room(inflateView(R.layout.marker_room), callbacks)
+            TYPE_ROOM -> MarkerViewHolder.Room(inflateView(R.layout.marker), callbacks)
+            TYPE_STAIRS -> MarkerViewHolder.Stairs(inflateView(R.layout.marker), callbacks)
+            TYPE_ENTRANCE -> MarkerViewHolder.Entrance(inflateView(R.layout.marker), callbacks)
+            TYPE_TOILET -> MarkerViewHolder.Toilet(inflateView(R.layout.marker), callbacks)
+            else -> throw IllegalStateException("Unknown marker type: ${type}")
         }
     }
 
@@ -51,7 +54,9 @@ class MarkerAdapter(
         return when (markerData.marker) {
             is Marker.Room -> TYPE_ROOM
             is Marker.Stairs -> TYPE_STAIRS
-            else -> TYPE_ROOM
+            is Marker.Toilet -> TYPE_TOILET
+            is Marker.Entrance -> TYPE_ENTRANCE
+            else -> throw IllegalStateException("Unsupported marker: ${markerData.marker}")
         }
     }
 
@@ -80,5 +85,7 @@ class MarkerAdapter(
 
         private const val TYPE_ROOM = 0
         private const val TYPE_STAIRS = 1
+        private const val TYPE_TOILET = 2
+        private const val TYPE_ENTRANCE = 3
     }
 }

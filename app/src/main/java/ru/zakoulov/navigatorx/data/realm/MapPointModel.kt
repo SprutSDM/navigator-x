@@ -14,7 +14,12 @@ enum class PointTypeEnum(val id: Int) {
     OTHER(4),
     STAIRS_UP(5),
     STAIRS_DOWN(6),
-    ELEVATOR(7)
+    ELEVATOR(8),
+    MAIN_ENTRANCE(9),
+    ENTRANCE(10),
+    TOILET_MALE(11),
+    TOILET_FEMALE(12),
+    TOILET(13)
 }
 
 open class MapPointModel(

@@ -11,7 +11,7 @@ import ru.zakoulov.navigatorx.data.Marker
 sealed class RoomPickerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     protected val roomImage: ImageView = view.findViewById(R.id.room_image)
     protected val roomTitle: TextView = view.findViewById(R.id.room_title)
-    protected val roomNumber: TextView = view.findViewById(R.id.room_number)
+    protected val roomNumber: TextView = view.findViewById(R.id.marker_text)
 
     @CallSuper
     open fun setup(marker: Marker, onClickListener: View.OnClickListener) {

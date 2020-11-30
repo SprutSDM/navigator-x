@@ -145,7 +145,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
         zoom_layout.setOnOutsideClickListener {
             viewModel.onOutsideClick()
         }
-        roomPickerRoomInfo = bottom_sheet_room_info.findViewById(R.id.room_number)
+        roomPickerRoomInfo = bottom_sheet_room_info.findViewById(R.id.marker_text)
         lifecycleScope.launch {
             viewModel.events.collect {
                 when (it) {

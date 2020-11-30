@@ -38,3 +38,9 @@ fun View.setBackgroundShapeColor(@ColorRes colorRes: Int) {
 fun TextView.setTextColorRes(@ColorRes colorRes: Int) {
     setTextColor(ContextCompat.getColor(context, colorRes))
 }
+
+fun TextView.setDrawablesColorRes(@ColorRes colorRes: Int) {
+    compoundDrawables.forEach { drawable ->
+        drawable?.setTint(ContextCompat.getColor(context, colorRes))
+    }
+}

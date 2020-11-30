@@ -28,6 +28,7 @@ sealed class Marker(
         building = building,
         corpus = corpus
     )
+
     class Message(
         id: String,
         scaleVisible: Float,
@@ -101,4 +102,54 @@ sealed class Marker(
         building = building,
         corpus = corpus
     )
+
+    class Entrance(
+        id: String,
+        scaleVisible: Float,
+        positionX: Float,
+        positionY: Float,
+        floor: Int,
+        building: Building,
+        corpus: Int,
+        val type: Type,
+        val labelText: String
+    ) : Marker(
+        id = id,
+        scaleVisible = scaleVisible,
+        positionX = positionX,
+        positionY = positionY,
+        floor = floor,
+        building = building,
+        corpus = corpus
+    ) {
+        enum class Type {
+            MAIN,
+            COMMON
+        }
+    }
+
+    class Toilet(
+        id: String,
+        scaleVisible: Float,
+        positionX: Float,
+        positionY: Float,
+        floor: Int,
+        building: Building,
+        corpus: Int,
+        val type: Type
+    ) : Marker(
+        id = id,
+        scaleVisible = scaleVisible,
+        positionX = positionX,
+        positionY = positionY,
+        floor = floor,
+        building = building,
+        corpus = corpus
+    ) {
+        enum class Type {
+            MALE,
+            FEMALE,
+            COMBINED
+        }
+    }
 }

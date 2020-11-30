@@ -4,14 +4,20 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.CallSuper
+import androidx.annotation.DrawableRes
 import com.otaliastudios.zoom.ZoomMapViewHolder
 import ru.zakoulov.navigatorx.R
 import ru.zakoulov.navigatorx.data.Marker
 import ru.zakoulov.navigatorx.ui.setBackgroundShapeColor
+import ru.zakoulov.navigatorx.ui.setDrawablesColorRes
 import ru.zakoulov.navigatorx.ui.setTextColorRes
 import ru.zakoulov.navigatorx.ui.setTintColor
 
 sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbacks) : ZoomMapViewHolder(view) {
+    private var markerPointer: ImageView = view.findViewById(R.id.marker_pointer)
+    private var markerText: TextView = view.findViewById(R.id.marker_text)
+
     private var positionX: Float = 0f
     private var positionY: Float = 0f
     private var visibilityRate: Float = 0f
@@ -19,6 +25,7 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
     private var markerId: String? = null
     private var forceVisible: Boolean = false
 
+    @CallSuper
     open fun setupViewHolder(markerData: MarkerData) {
         positionX = markerData.marker.positionX
         positionY = markerData.marker.positionY
@@ -38,11 +45,46 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
         view.setOnClickListener {
             callbacks.onMarkerSelected(markerData.marker)
         }
+        markerText.text = getTextFrom(markerData)
+        markerText.setCompoundDrawablesWithIntrinsicBounds(
+            0,
+            0,
+            getIconResFrom(markerData),
+            0
+        )
+        markerText.compoundDrawablePadding = if (markerText.text.isEmpty()) {
+            0
+        } else {
+            markerText.resources.getDimension(R.dimen.markerDrawablePadding).toInt()
+        }
+        if (markerData.isSelected) {
+            markerPointer.setTintColor(R.color.colorPrimary)
+            markerText.apply {
+                setBackgroundShapeColor(R.color.colorPrimary)
+                setTextColorRes(android.R.color.white)
+                setDrawablesColorRes(android.R.color.white)
+            }
+        } else {
+            markerPointer.setTintColor(android.R.color.white)
+            markerText.apply {
+                setBackgroundShapeColor(android.R.color.white)
+                setTextColorRes(android.R.color.black)
+                setDrawablesColorRes(R.color.colorPrimary)
+            }
+        }
     }
+
+    abstract fun getTextFrom(markerData: MarkerData): String
+
+    @DrawableRes
+    abstract fun getIconResFrom(markerData: MarkerData): Int
 
     fun clearViewHolder() {
         markerId = null
     }
+
+    override fun getPivotX() = view.width / 2f
+    override fun getPivotY() = markerPointer.bottom.toFloat()
 
     override fun getPositionX() = positionX
     override fun getPositionY() = positionY
@@ -90,42 +132,29 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
     }
 
     class Room(view: View, callbacks: MarkerCallbacks) : MarkerViewHolder(view, callbacks) {
-        private var markerPointer: ImageView = view.findViewById(R.id.marker_pointer)
-        private var roomNumber: TextView = view.findViewById(R.id.room_number)
+        override fun getTextFrom(markerData: MarkerData) = (markerData.marker as Marker.Room).roomNumber
+        override fun getIconResFrom(markerData: MarkerData) = 0
+    }
 
-        override fun getPivotX() = view.width / 2f
-        override fun getPivotY() = markerPointer.bottom.toFloat()
+    class Stairs(view: View, callbacks: MarkerCallbacks) : MarkerViewHolder(view, callbacks) {
+        override fun getTextFrom(markerData: MarkerData) = ""
+        override fun getIconResFrom(markerData: MarkerData) = R.drawable.ic_arrow
+    }
 
-        override fun setupViewHolder(markerData: MarkerData) {
-            super.setupViewHolder(markerData)
-            if (markerData.isSelected) {
-                markerPointer.setTintColor(R.color.colorPrimary)
-                roomNumber.setBackgroundShapeColor(R.color.colorPrimary)
-                roomNumber.setTextColorRes(android.R.color.white)
-            } else {
-                markerPointer.setTintColor(android.R.color.white)
-                roomNumber.setBackgroundShapeColor(android.R.color.white)
-                roomNumber.setTextColorRes(android.R.color.black)
-            }
-            (markerData.marker as? Marker.Room)?.let {
-                roomNumber.text = markerData.marker.roomNumber
+    class Toilet(view: View, callbacks: MarkerCallbacks) : MarkerViewHolder(view, callbacks) {
+        override fun getTextFrom(markerData: MarkerData) = "WC"
+        override fun getIconResFrom(markerData: MarkerData): Int {
+            return when ((markerData.marker as Marker.Toilet).type) {
+                Marker.Toilet.Type.MALE -> R.drawable.ic_toilet_male
+                Marker.Toilet.Type.FEMALE -> R.drawable.ic_toilet_female
+                Marker.Toilet.Type.COMBINED -> R.drawable.ic_toilet_combined
             }
         }
     }
 
-    class Stairs(view: View, callbacks: MarkerCallbacks) : MarkerViewHolder(view, callbacks) {
-        private var markerPointer: View = view.findViewById(R.id.marker_pointer)
-        private var arrow: ImageView = view.findViewById(R.id.arrow_image)
-
-        override fun getPivotX() = view.width / 2f
-        override fun getPivotY() = markerPointer.bottom.toFloat()
-
-        override fun setupViewHolder(markerData: MarkerData) {
-            super.setupViewHolder(markerData)
-            (markerData.marker as? Marker.Stairs)?.let {
-                arrow.rotation = if (it.isUp) 180f else 0f
-            }
-        }
+    class Entrance(view: View, callbacks: MarkerCallbacks) : MarkerViewHolder(view, callbacks) {
+        override fun getTextFrom(markerData: MarkerData) = (markerData.marker as Marker.Entrance).labelText
+        override fun getIconResFrom(markerData: MarkerData) = 0
     }
 
     companion object {
