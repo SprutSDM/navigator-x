@@ -16,7 +16,7 @@
         android:textColor="@android:color/black"
         android:background="@drawable/shape_marker"
         android:textStyle="bold"
-        android:text="1234"
+        android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
