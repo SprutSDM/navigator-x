@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_marker"
-        android:src="@drawable/ic_arrow"
+        android:src="@drawable/ic_arrow_down"
         android:textStyle="bold"
         android:adjustViewBounds="true"
         android:rotation="180"

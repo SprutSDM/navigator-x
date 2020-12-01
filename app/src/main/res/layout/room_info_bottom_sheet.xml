@@ -77,7 +77,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:rotation="180"
-                android:src="@drawable/ic_arrow"/>
+                android:src="@drawable/ic_arrow_down"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_arrow"/>
+                android:src="@drawable/ic_arrow_down"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

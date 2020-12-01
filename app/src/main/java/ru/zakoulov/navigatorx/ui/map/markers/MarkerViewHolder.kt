@@ -138,7 +138,13 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
 
     class Stairs(view: View, callbacks: MarkerCallbacks) : MarkerViewHolder(view, callbacks) {
         override fun getTextFrom(markerData: MarkerData) = ""
-        override fun getIconResFrom(markerData: MarkerData) = R.drawable.ic_arrow
+        override fun getIconResFrom(markerData: MarkerData): Int {
+            return if ((markerData.marker as Marker.Stairs).isUp) {
+                R.drawable.ic_arrow_up
+            } else {
+                R.drawable.ic_arrow_down
+            }
+        }
     }
 
     class Toilet(view: View, callbacks: MarkerCallbacks) : MarkerViewHolder(view, callbacks) {
