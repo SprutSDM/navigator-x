@@ -260,7 +260,16 @@ class MainViewModel(
     fun onOutsideClick() {
         val currentState = state.value
         if (currentState is State.Map) {
-            _state.value = currentState.copy(mapState = MapState.Viewing)
+            _state.value = currentState.copy(
+                mapState = MapState.Viewing,
+                markers = currentState.markers.map {
+                    if (it.isSelected) {
+                        it.copy(isSelected = false)
+                    } else {
+                        it
+                    }
+                }
+            )
         }
     }
 
