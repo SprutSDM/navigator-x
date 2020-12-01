@@ -110,6 +110,15 @@ class RealmMapper {
                 }
             }
         }
-        return MapData(markers, pathDots, pathConnections)
+        return MapData(
+            markers.sortedWith(
+                compareBy(
+                    { it.positionY },
+                    { it.positionX }
+                )
+            ),
+            pathDots,
+            pathConnections
+        )
     }
 }
