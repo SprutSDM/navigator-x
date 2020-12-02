@@ -1,15 +1,20 @@
 package ru.zakoulov.navigatorx.viewmodel
 
-class FullPathInfo(
-    val floorPaths: Map<Int, FloorPaths>,
-    val virtualDist: Float
-)
+import ru.zakoulov.navigatorx.data.PathDot
 
-class FloorPaths(
-    val paths: List<Path>
+class FullPathInfo(
+    val floorPaths: Map<Int, List<Path>>,
+    val virtualDist: Float,
+    val pathBreakTypes: Map<String, Path.BreakType>
 )
 
 class Path(
-    val path: List<Pair<Float, Float>>
-)
-
+    val path: List<PathDot>,
+    val breakType: BreakType
+) {
+    enum class BreakType {
+        DESTINATION,
+        FLOOR_UP,
+        FLOOR_DOWN
+    }
+}

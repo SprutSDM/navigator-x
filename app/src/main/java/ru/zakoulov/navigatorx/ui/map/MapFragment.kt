@@ -87,14 +87,16 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
     lateinit var markerAdapter: MarkerAdapter
     lateinit var roomPickerAdapter: RoomPickerAdapter
 
+    private val pathMapper = PathMapper()
+
     val mapWatcher = modelWatcher<State.Map> {
         watch(State.Map::floorPaths) { floorPaths ->
             if (floorPaths == null) {
                 zoom_layout.resetPaths()
             } else {
                 zoom_layout.resetPaths()
-                floorPaths.paths.forEach {
-                    zoom_layout.addPath(it.path)
+                floorPaths.forEach {
+                    zoom_layout.addPath(pathMapper.mapPathInfo(it))
                 }
                 zoom_layout.animatePaths()
             }

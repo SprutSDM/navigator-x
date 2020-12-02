@@ -50,7 +50,7 @@ class MainViewModel(
                     is State.Loading -> {
                         State.Map(
                             mapState = MapState.Viewing,
-                            markers = realmRepository.mapData.value.markers
+                            markers = mapData.markers
                                 .filter { it.floor == 1 }
                                 .map { MarkerData(marker = it) },
                             selectedBuilding = Building.MAIN_CORPUS,
@@ -224,16 +224,25 @@ class MainViewModel(
         _state.value = currentState.copy(
             mapState = MapState.Viewing,
             markers = currentState.markers.map {
-                if (it.isSelected) it.copy(
+                it.copy(
                     isSelected = false,
+                    additionalText = getBreakTypeString(pathInfo?.pathBreakTypes?.get(it.marker.id)),
                     forceVisible = it.marker.id == departureMarker?.id || it.marker.id == destinationMarker?.id
-                ) else it
+                )
             },
             departureMarker = departureMarker,
             destinationMarker = destinationMarker,
             pathInfo = pathInfo,
             floorPaths = pathInfo?.floorPaths?.get(currentState.floor)
         )
+    }
+
+    private fun getBreakTypeString(breakType: Path.BreakType?): String? {
+        return when (breakType) {
+            Path.BreakType.FLOOR_DOWN -> "Вниз"
+            Path.BreakType.FLOOR_UP -> "Вверх"
+            else -> null
+        }
     }
 
     fun onRoomInfoBSClosed() {
@@ -307,7 +316,14 @@ class MainViewModel(
                             it.building == currentState.selectedBuilding &&
                                     it.floor == currentState.floor + 1
                         }
-                        .map { MarkerData(marker = it) },
+                        .map {
+                            MarkerData(
+                                marker = it,
+                                additionalText = getBreakTypeString(currentState.pathInfo?.pathBreakTypes?.get(it.id)),
+                                forceVisible = it.id == currentState.departureMarker?.id ||
+                                        it.id == currentState.destinationMarker?.id
+                            )
+                        },
                     floor = currentState.floor + 1,
                     floorPaths = currentState.pathInfo?.floorPaths?.get(currentState.floor + 1)
                 )
@@ -327,7 +343,14 @@ class MainViewModel(
                             it.building == currentState.selectedBuilding &&
                                     it.floor == currentState.floor - 1
                         }
-                        .map { MarkerData(marker = it) },
+                        .map {
+                            MarkerData(
+                                marker = it,
+                                additionalText = getBreakTypeString(currentState.pathInfo?.pathBreakTypes?.get(it.id)),
+                                forceVisible = it.id == currentState.departureMarker?.id ||
+                                        it.id == currentState.destinationMarker?.id
+                            )
+                        },
                     floor = currentState.floor - 1,
                     floorPaths = currentState.pathInfo?.floorPaths?.get(currentState.floor - 1)
                 )

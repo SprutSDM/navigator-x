@@ -137,7 +137,7 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
     }
 
     class Stairs(view: View, callbacks: MarkerCallbacks) : MarkerViewHolder(view, callbacks) {
-        override fun getTextFrom(markerData: MarkerData) = ""
+        override fun getTextFrom(markerData: MarkerData) = markerData.additionalText ?: ""
         override fun getIconResFrom(markerData: MarkerData): Int {
             return if ((markerData.marker as Marker.Stairs).isUp) {
                 R.drawable.ic_arrow_up

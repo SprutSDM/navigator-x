@@ -15,7 +15,7 @@ sealed class State {
         val departureMarker: Marker?,
         val destinationMarker: Marker?,
         val pathInfo: FullPathInfo?,
-        val floorPaths: FloorPaths?
+        val floorPaths: List<Path>?
     ) : State()
 }
 

@@ -50,20 +50,22 @@ class MapPathResolver(
         while (path.last().id in prevs) {
             path.add(pathDots[prevs[path.last().id]] ?: return null)
         }
+        val floorPaths = splitPathByFloors(path.reversed())
+        val pathBreakTypes = mutableMapOf<String, Path.BreakType>()
+        floorPaths.forEach { (_, paths) ->
+            paths.forEach {
+                pathBreakTypes[it.path.last().id] = it.breakType
+            }
+        }
         return FullPathInfo(
-            floorPaths = splitPathByFloors(path).mapValues { floorPaths ->
-                FloorPaths(paths = floorPaths.value.map { path ->
-                    Path(path.map { pathDot ->
-                        pathDot.positionX to pathDot.positionY
-                    })
-                })
-            },
-            virtualDist = dists[finishDot] ?: return null
+            floorPaths = floorPaths,
+            virtualDist = dists[finishDot] ?: return null,
+            pathBreakTypes = pathBreakTypes
         )
     }
 
-    private fun splitPathByFloors(path: List<PathDot>): Map<Int, List<List<PathDot>>> {
-        val floorPaths = mutableMapOf<Int, MutableList<List<PathDot>>>()
+    private fun splitPathByFloors(path: List<PathDot>): Map<Int, List<Path>> {
+        val floorPaths = mutableMapOf<Int, MutableList<Path>>()
         var currentPath = mutableListOf(path[0])
         for (i in 1 until path.size) {
             val dot = path[i]
@@ -73,14 +75,28 @@ class MapPathResolver(
                 if (currentPath[0].floor !in floorPaths) {
                     floorPaths[currentPath[0].floor] = mutableListOf()
                 }
-                floorPaths[currentPath[0].floor]!!.add(currentPath)
+                floorPaths[currentPath[0].floor]!!.add(
+                    Path(
+                        path = currentPath,
+                        breakType = if (dot.floor > currentPath[0].floor) {
+                            Path.BreakType.FLOOR_UP
+                        } else {
+                            Path.BreakType.FLOOR_DOWN
+                        }
+                    )
+                )
                 currentPath = mutableListOf(dot)
             }
         }
         if (currentPath[0].floor !in floorPaths) {
             floorPaths[currentPath[0].floor] = mutableListOf()
         }
-        floorPaths[currentPath[0].floor]!!.add(currentPath)
+        floorPaths[currentPath[0].floor]!!.add(
+            Path(
+                path = currentPath,
+                breakType = Path.BreakType.DESTINATION
+            )
+        )
         return floorPaths
     }
 }
