@@ -194,6 +194,8 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
                             it.departureMarker?.let { marker ->
                                 text = when (marker) {
                                     is Marker.Room -> marker.roomNumber
+                                    is Marker.Entrance -> marker.labelText
+                                    is Marker.Toilet -> "WC"
                                     else -> ""
                                 }
                                 setTextColor(ContextCompat.getColor(context, android.R.color.black))
@@ -206,6 +208,8 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
                             it.destinationMarker?.let { marker ->
                                 text = when (marker) {
                                     is Marker.Room -> marker.roomNumber
+                                    is Marker.Entrance -> marker.labelText
+                                    is Marker.Toilet -> "WC"
                                     else -> ""
                                 }
                                 setTextColor(ContextCompat.getColor(context, android.R.color.black))
