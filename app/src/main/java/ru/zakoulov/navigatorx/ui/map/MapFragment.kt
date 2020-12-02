@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
@@ -26,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.otaliastudios.zoom.ZoomMap
 import com.otaliastudios.zoom.ZoomMapAdapter
 import com.otaliastudios.zoom.ZoomMapViewHolder
+import kotlinx.android.synthetic.main.element_room.room_title
 import kotlinx.android.synthetic.main.fragment_map.building_title
 import kotlinx.android.synthetic.main.fragment_map.down_floor_arrow
 import kotlinx.android.synthetic.main.fragment_map.floor_number
@@ -69,6 +71,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
     private lateinit var roomInfoBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var roomPickerBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var roomPickerRoomInfo: TextView
+    private lateinit var roomPickerImage: AppCompatImageView
 
 //    private val rawMarkers = List(200) {
 //        RawMarkerData(
@@ -146,6 +149,8 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
             viewModel.onOutsideClick()
         }
         roomPickerRoomInfo = bottom_sheet_room_info.findViewById(R.id.marker_text)
+        roomPickerImage = bottom_sheet_room_info.findViewById(R.id.room_image)
+        roomPickerImage.clipToOutline = true
         lifecycleScope.launch {
             viewModel.events.collect {
                 when (it) {
@@ -226,9 +231,31 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
                                 if (roomInfoBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                                     roomInfoBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                                 }
-                                roomPickerRoomInfo.text = when (mapState.selectedMarker) {
-                                    is Marker.Room -> "Ауд. ${mapState.selectedMarker.roomNumber}"
-                                    else -> ""
+                                when (mapState.selectedMarker) {
+                                    is Marker.Room -> {
+                                        roomPickerRoomInfo.text = mapState.selectedMarker.roomNumber
+                                        room_title.text = mapState.selectedMarker.roomTitle
+                                        roomPickerImage.setImageResource(R.drawable.ic_place)
+                                    }
+                                    is Marker.Toilet -> {
+                                        roomPickerRoomInfo.text = when (mapState.selectedMarker.type) {
+                                            Marker.Toilet.Type.MALE -> "Мужской туалет"
+                                            Marker.Toilet.Type.FEMALE -> "Женский туалет"
+                                            Marker.Toilet.Type.COMBINED -> "Туалет"
+                                        }
+                                        room_title.text = "Туалет"
+                                        roomPickerImage.setImageResource(R.drawable.ic_toilet)
+                                    }
+                                    is Marker.Entrance -> {
+                                        roomPickerRoomInfo.text = mapState.selectedMarker.labelText
+                                        room_title.text = "Вход"
+                                        roomPickerImage.setImageResource(R.drawable.ic_enterance)
+                                    }
+                                    else -> {
+                                        room_title.text = ""
+                                        roomPickerRoomInfo.text = ""
+                                        roomPickerImage.setImageResource(0)
+                                    }
                                 }
                                 input_room.setText("")
                                 hideKeyboard()

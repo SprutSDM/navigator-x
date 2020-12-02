@@ -40,10 +40,7 @@ sealed class RoomPickerViewHolder(
         override fun setup(marker: Marker) {
             super.setup(marker)
             (marker as? Marker.Entrance)?.let { entranceMarker ->
-                roomTitle.text = when (entranceMarker.type) {
-                    Marker.Entrance.Type.MAIN -> "Главный вход"
-                    Marker.Entrance.Type.COMMON -> "Вход"
-                }
+                roomTitle.text = entranceMarker.labelText
                 roomNumber.text = entranceMarker.labelText
                 roomImage.setImageResource(R.drawable.ic_enterance)
             }
