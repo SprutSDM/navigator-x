@@ -331,7 +331,8 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
 
     override fun onMarkerSelected(marker: Marker) {
         when (marker) {
-            is Marker.Room -> viewModel.onMarkerSelected(marker)
+            is Marker.Room, is Marker.Toilet, is Marker.Entrance -> viewModel.onMarkerSelected(marker)
+            else -> viewModel.onOutsideClick()
         }
     }
 
