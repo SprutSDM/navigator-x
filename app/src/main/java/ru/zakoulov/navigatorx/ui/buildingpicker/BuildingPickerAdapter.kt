@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
 import ru.zakoulov.navigatorx.R
 import ru.zakoulov.navigatorx.data.Building
@@ -35,7 +36,9 @@ class BuildingPickerAdapter(
     override fun getItemCount() = buildings.size
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val buildingImage: ImageView = view.findViewById(R.id.building_image)
+        private val buildingImage: ImageView = view.findViewById<AppCompatImageView>(R.id.building_image).apply {
+            clipToOutline = true
+        }
         private val buildingTitle: TextView = view.findViewById(R.id.building_title)
         private val buildingDescription: TextView = view.findViewById(R.id.building_description)
 

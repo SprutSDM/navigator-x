@@ -97,9 +97,7 @@ class MainViewModel(
             _state.value = currentState.copy(
                 mapState = MapState.RoomPicking(
                     pickType = MapState.RoomPicking.PickType.PICK_DEPARTURE,
-                    filteredRooms = realmRepository.mapData.value.markers.filter {
-                        it.building.id == currentState.selectedBuilding.id
-                    }
+                    filteredRooms = filterRooms("", currentState.selectedBuilding.id)
                 )
             )
         }
@@ -111,9 +109,7 @@ class MainViewModel(
             _state.value = currentState.copy(
                 mapState = MapState.RoomPicking(
                     pickType = MapState.RoomPicking.PickType.PICK_DESTINATION,
-                    filteredRooms = realmRepository.mapData.value.markers.filter {
-                        it.building.id == currentState.selectedBuilding.id
-                    }
+                    filteredRooms = filterRooms("", currentState.selectedBuilding.id)
                 )
             )
         }
@@ -124,12 +120,25 @@ class MainViewModel(
         if (currentState is State.Map && currentState.mapState is MapState.RoomPicking) {
             _state.value = currentState.copy(
                 mapState = currentState.mapState.copy(
-                    filteredRooms = realmRepository.mapData.value.markers.filter {
-                        it.building.id == currentState.selectedBuilding.id && (
-                                matchText.isEmpty() || it is Marker.Room && it.roomNumber.contains(matchText))
-                    }
+                    filteredRooms = filterRooms(matchText, currentState.selectedBuilding.id)
                 )
             )
+        }
+    }
+
+    private fun filterRooms(matchText: String, buildingId: Int): List<Marker> {
+        fun isRoomMatches(roomMarker: Marker.Room): Boolean {
+            return matchText.isEmpty() || roomMarker.roomNumber.contains(matchText, ignoreCase = true)
+        }
+
+        fun isEntranceMatches(entranceMarker: Marker.Entrance): Boolean {
+            return matchText.isEmpty() || entranceMarker.labelText.contains(matchText, ignoreCase = true)
+        }
+
+        return realmRepository.mapData.value.markers.filter {
+            it.building.id == buildingId && (
+                    it is Marker.Room && isRoomMatches(it) ||
+                    it is Marker.Entrance && it.type == Marker.Entrance.Type.MAIN && isEntranceMatches(it))
         }
     }
 

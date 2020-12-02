@@ -218,6 +218,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
                                 roomPickerBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                                 building_title.text = it.selectedBuilding.title
                                 hideKeyboard()
+                                input_room.setText("")
                             }
                             is MapState.MarkerSelected -> {
                                 navigationBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -229,6 +230,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
                                     is Marker.Room -> "Ауд. ${mapState.selectedMarker.roomNumber}"
                                     else -> ""
                                 }
+                                input_room.setText("")
                                 hideKeyboard()
                             }
                             is MapState.RoomPicking -> {
