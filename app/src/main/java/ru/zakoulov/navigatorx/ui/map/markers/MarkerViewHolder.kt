@@ -64,12 +64,29 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
                 setTextColorRes(android.R.color.white)
                 setDrawablesColorRes(android.R.color.white)
             }
+            view.pivotX = getPivotX()
+            view.pivotY = getPivotY()
+            val animScale = 1.15f
+            if (view.scaleX != animScale) {
+                view.animate()
+                    .scaleX(animScale)
+                    .scaleY(animScale)
+                    .setDuration(view.resources.getInteger(R.integer.animation_marker_scale_duration).toLong())
+                    .start()
+            }
         } else {
             markerPointer.setTintColor(android.R.color.white)
             markerText.apply {
                 setBackgroundShapeColor(android.R.color.white)
                 setTextColorRes(android.R.color.black)
                 setDrawablesColorRes(R.color.colorPrimary)
+            }
+            if (view.scaleX != 1f) {
+                view.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(view.resources.getInteger(R.integer.animation_duration).toLong())
+                    .start()
             }
         }
     }
