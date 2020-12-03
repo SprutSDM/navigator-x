@@ -25,16 +25,14 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.container, MapFragment())
             .commit()
         lifecycleScope.launch {
-            mainViewModel.events.collect {
-                when (it) {
-                    is Event.NavigateBack -> finish()
-                }
-            }
+            mainViewModel
         }
     }
 
     override fun onBackPressed() {
-        mainViewModel.onBackPressed()
+        if (!mainViewModel.onBackPressed()) {
+            finish()
+        }
     }
 
     companion object {

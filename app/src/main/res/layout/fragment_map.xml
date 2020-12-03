@@ -78,7 +78,7 @@
             app:maxZoomType="zoom"
             app:animationDuration="280"
             app:hasClickableChildren="false"
-            app:background="@android:color/white"
+            app:background="@drawable/lomo1"
             app:mapWidth="5000"
             app:mapHeight="5000"
             app:pathColor="@color/colorPrimary"

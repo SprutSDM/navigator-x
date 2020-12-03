@@ -159,6 +159,17 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
                     is Event.NoPathFound -> {
                         Toast.makeText(context, getString(R.string.path_was_not_found), Toast.LENGTH_SHORT).show()
                     }
+                    is Event.FocusOn -> {
+                        zoom_layout.post {
+                            zoom_layout.moveToCenter(1f, animate = false)
+                            zoom_layout.scrollTo(
+                                zoom = 2f,
+                                x = it.marker.positionX,
+                                y = it.marker.positionY,
+                                animate = true
+                            )
+                        }
+                    }
                 }
             }
         }

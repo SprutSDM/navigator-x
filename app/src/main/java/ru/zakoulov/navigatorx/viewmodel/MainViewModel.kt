@@ -38,8 +38,22 @@ class MainViewModel(
     )
     val state: StateFlow<State> = _state
 
-    private val _events: MutableSharedFlow<Event> = MutableSharedFlow(extraBufferCapacity = 1)
+    private val _events: MutableSharedFlow<Event> = MutableSharedFlow(replay = 1, extraBufferCapacity = 1)
     val events: SharedFlow<Event> = _events
+
+    init {
+        val currentState = state.value
+        if (currentState is State.Map) {
+            currentState.markers.find {
+                it.marker.building == currentState.selectedBuilding &&
+                        it.marker.floor == currentState.floor &&
+                        it.marker is Marker.Entrance && it.marker.type == Marker.Entrance.Type.MAIN
+            }?.let {
+                Log.d(TAG, "main entrance: ${it}")
+                _events.tryEmit(Event.FocusOn(it.marker))
+            }
+        }
+    }
 
     private val mapPathResolver = MapPathResolver()
 
@@ -291,15 +305,19 @@ class MainViewModel(
         }
     }
 
-    fun onBackPressed() {
+    /**
+     * @return true if back press was consumed
+     */
+    fun onBackPressed(): Boolean {
         Log.d(TAG, "onBackPressed: ${state.value}")
-        when (val currentState = state.value) {
-            is State.Loading -> _events.tryEmit(Event.NavigateBack)
+        return when (val currentState = state.value) {
+            is State.Loading -> false
             is State.Map -> when (currentState.mapState) {
                 is MapState.RoomPicking, is MapState.MarkerSelected -> {
                     _state.value = currentState.copy(mapState = MapState.Viewing)
+                    true
                 }
-                is MapState.Viewing -> _events.tryEmit(Event.NavigateBack)
+                is MapState.Viewing -> false
             }
         }
     }
