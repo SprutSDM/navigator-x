@@ -45,6 +45,7 @@ class BuildingPickerAdapter(
         fun setup(building: Building, onClickListener: View.OnClickListener) {
             buildingTitle.text = building.title
             buildingDescription.text = building.address
+            buildingImage.setImageResource(building.buildingImage)
             itemView.setOnClickListener(onClickListener)
         }
     }
