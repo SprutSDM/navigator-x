@@ -214,7 +214,11 @@ class MainViewModel(
         }
     }
 
-    private fun findPathAndUpdateState(currentState: State.Map, departureMarker: Marker?, destinationMarker: Marker?) {
+    private fun findPathAndUpdateState(
+        currentState: State.Map,
+        departureMarker: Marker?,
+        destinationMarker: Marker?
+    ) {
         val pathInfo = if (departureMarker != null && destinationMarker != null) {
             // If departure or destination marker was reselected, we don't have to find and animate the same path
             if (currentState.departureMarker?.id == departureMarker.id &&
@@ -235,20 +239,29 @@ class MainViewModel(
         } else {
             null
         }
+        val floor = departureMarker?.floor ?: currentState.floor
         _state.value = currentState.copy(
             mapState = MapState.Viewing,
-            markers = currentState.markers.map {
-                it.copy(
-                    isSelected = false,
-                    additionalText = getBreakTypeString(pathInfo?.pathBreakTypes?.get(it.marker.id)),
-                    forceVisible = it.marker.id == departureMarker?.id || it.marker.id == destinationMarker?.id
-                )
-            },
+            markers = realmRepository.mapData.value.markers
+                .filter {
+                    it.building == currentState.selectedBuilding && it.floor == floor
+                }.map {
+                    MarkerData(
+                        marker = it,
+                        isSelected = false,
+                        additionalText = getBreakTypeString(pathInfo?.pathBreakTypes?.get(it.id)),
+                        forceVisible = it.id == departureMarker?.id || it.id == destinationMarker?.id
+                    )
+                },
             departureMarker = departureMarker,
             destinationMarker = destinationMarker,
             pathInfo = pathInfo,
-            floorPaths = pathInfo?.floorPaths?.get(currentState.floor)
+            floor = floor,
+            floorPaths = pathInfo?.floorPaths?.get(floor)
         )
+        departureMarker?.let {
+            _events.tryEmit(Event.FocusOn(it))
+        }
     }
 
     private fun getBreakTypeString(breakType: Path.BreakType?): String? {

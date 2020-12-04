@@ -136,6 +136,9 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
             adapter = roomPickerAdapter
             layoutManager = roomPickerLayoutManager
         }
+        view.post {
+            zoom_layout.moveToCenter(1f, animate = false)
+        }
 
         roomInfoBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_room_info)
         navigationBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_navigation).apply {
@@ -161,9 +164,8 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
                     }
                     is Event.FocusOn -> {
                         zoom_layout.post {
-                            zoom_layout.moveToCenter(1f, animate = false)
                             zoom_layout.scrollTo(
-                                zoom = 2f,
+                                zoom = 2.5f,
                                 x = it.marker.positionX,
                                 y = it.marker.positionY,
                                 animate = true
