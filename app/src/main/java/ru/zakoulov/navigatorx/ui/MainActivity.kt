@@ -15,7 +15,7 @@ import ru.zakoulov.navigatorx.viewmodel.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels {
-        MainViewModelFactory.getInstance(getApp().realmRepository)
+        MainViewModelFactory.getInstance(getApp().realmRepository, getApp().sharedPreferencesManager)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

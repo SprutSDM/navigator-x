@@ -11,12 +11,16 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.zakoulov.navigatorx.data.Building
 import ru.zakoulov.navigatorx.data.Marker
+import ru.zakoulov.navigatorx.data.SharedPreferencesManager
 import ru.zakoulov.navigatorx.data.realm.RealmRepository
 import ru.zakoulov.navigatorx.ui.map.markers.MarkerData
 
 class MainViewModel(
-    private val realmRepository: RealmRepository
+    private val realmRepository: RealmRepository,
+    private val sharedPreferencesManager: SharedPreferencesManager
 ) : ViewModel() {
+
+    val storedSelectedBuilding = sharedPreferencesManager.loadSelectedBuilding()
 
     init {
         observeMapData()
@@ -26,9 +30,11 @@ class MainViewModel(
         State.Map(
             mapState = MapState.Viewing,
             markers = realmRepository.mapData.value.markers
-                .filter { it.floor == 1 && it.building == Building.MAIN_CORPUS }
+                .filter {
+                    it.floor == 1 && it.building == storedSelectedBuilding
+                }
                 .map { MarkerData(marker = it) },
-            selectedBuilding = Building.MAIN_CORPUS,
+            selectedBuilding = storedSelectedBuilding,
             floor = 1,
             departureMarker = null,
             destinationMarker = null,
@@ -55,9 +61,11 @@ class MainViewModel(
                         State.Map(
                             mapState = MapState.Viewing,
                             markers = mapData.markers
-                                .filter { it.floor == 1 && it.building == Building.MAIN_CORPUS }
+                                .filter {
+                                    it.floor == 1 && it.building == storedSelectedBuilding
+                                }
                                 .map { MarkerData(marker = it) },
-                            selectedBuilding = Building.MAIN_CORPUS,
+                            selectedBuilding = storedSelectedBuilding,
                             floor = 1,
                             departureMarker = null,
                             destinationMarker = null,
@@ -69,7 +77,7 @@ class MainViewModel(
                         currentState.copy(
                             mapState = MapState.Viewing,
                             markers = realmRepository.mapData.value.markers
-                                .filter { it.floor == currentState.floor && it.building == Building.MAIN_CORPUS }
+                                .filter { it.floor == currentState.floor && it.building == currentState.selectedBuilding }
                                 .map { MarkerData(marker = it) },
                         )
                     }
@@ -82,6 +90,7 @@ class MainViewModel(
         when (val currentState = state.value) {
             is State.Map -> {
                 if (selectedBuilding != currentState.selectedBuilding) {
+                    sharedPreferencesManager.saveSelectedBuilding(selectedBuilding)
                     _state.value = currentState.copy(
                         mapState = MapState.Viewing,
                         markers = realmRepository.mapData.value.markers
