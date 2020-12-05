@@ -42,17 +42,7 @@ class MainViewModel(
     val events: SharedFlow<Event> = _events
 
     init {
-        val currentState = state.value
-        if (currentState is State.Map) {
-            currentState.markers.find {
-                it.marker.building == currentState.selectedBuilding &&
-                        it.marker.floor == currentState.floor &&
-                        it.marker is Marker.Entrance && it.marker.type == Marker.Entrance.Type.MAIN
-            }?.let {
-                Log.d(TAG, "main entrance: ${it}")
-                _events.tryEmit(Event.FocusOn(it.marker))
-            }
-        }
+        focusOnMainEntrance()
     }
 
     private val mapPathResolver = MapPathResolver()
@@ -100,7 +90,21 @@ class MainViewModel(
                         selectedBuilding = selectedBuilding,
                         floor = 1,
                     )
+                    focusOnMainEntrance()
                 }
+            }
+        }
+    }
+
+    private fun focusOnMainEntrance() {
+        val currentState = state.value
+        if (currentState is State.Map) {
+            currentState.markers.find {
+                it.marker.building == currentState.selectedBuilding &&
+                        it.marker.floor == currentState.floor &&
+                        it.marker is Marker.Entrance && it.marker.type == Marker.Entrance.Type.MAIN
+            }?.let {
+                _events.tryEmit(Event.FocusOn(it.marker))
             }
         }
     }
