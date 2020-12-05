@@ -9,10 +9,10 @@ class RealmRoomInfoMapper {
             name = realmRoomInfo.rtName?.takeIf { !it.equals("нет информации", ignoreCase = true) }?.capitalize(),
             capacity = realmRoomInfo.capacity?.takeIf { !it.equals("нет информации", ignoreCase = true) }?.capitalize(),
             realUsage = realmRoomInfo.realUsage?.takeIf { !it.equals("нет информации", ignoreCase = true) }?.capitalize(),
-            departmentName = realmRoomInfo.capacity?.takeIf { !it.equals("нет информации", ignoreCase = true) }?.capitalize(),
+            departmentName = realmRoomInfo.departmentName?.takeIf { !it.equals("нет информации", ignoreCase = true) }?.capitalize(),
             equipment = realmRoomInfo.equipment.map {
                 when {
-                    it.name == null || it.count == 0 -> ""
+                    it.name == null || it.count == 0 -> "${it.name}, ${it.count}"
                     it.count > 1 -> "${it.name.capitalize()} x${it.count}"
                     else -> it.name.capitalize()
                 }

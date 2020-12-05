@@ -28,6 +28,7 @@ import com.otaliastudios.zoom.ZoomMap
 import com.otaliastudios.zoom.ZoomMapAdapter
 import com.otaliastudios.zoom.ZoomMapViewHolder
 import kotlinx.android.synthetic.main.element_room.room_title
+import kotlinx.android.synthetic.main.element_room_description.view.room_description_text
 import kotlinx.android.synthetic.main.fragment_map.building_title
 import kotlinx.android.synthetic.main.fragment_map.down_floor_arrow
 import kotlinx.android.synthetic.main.fragment_map.floor_number
@@ -40,6 +41,11 @@ import kotlinx.android.synthetic.main.navigation_bottom_sheet.input_destination_
 import kotlinx.android.synthetic.main.room_info_bottom_sheet.bottom_sheet_room_info
 import kotlinx.android.synthetic.main.room_info_bottom_sheet.button_select_as_departure
 import kotlinx.android.synthetic.main.room_info_bottom_sheet.button_select_as_destination
+import kotlinx.android.synthetic.main.room_info_bottom_sheet.room_info_department
+import kotlinx.android.synthetic.main.room_info_bottom_sheet.room_info_description
+import kotlinx.android.synthetic.main.room_info_bottom_sheet.room_info_equipment
+import kotlinx.android.synthetic.main.room_info_bottom_sheet.room_info_group
+import kotlinx.android.synthetic.main.room_info_bottom_sheet.room_info_place
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.bottom_sheet_room_picker_info
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.could_not_find_rooms
 import kotlinx.android.synthetic.main.room_picker_bottom_sheet.input_room
@@ -156,6 +162,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
         roomPickerRoomInfo = bottom_sheet_room_info.findViewById(R.id.marker_text)
         roomPickerImage = bottom_sheet_room_info.findViewById(R.id.room_image)
         roomPickerImage.clipToOutline = true
+
         lifecycleScope.launch {
             viewModel.events.collect {
                 when (it) {
@@ -250,30 +257,44 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
                                 if (roomInfoBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                                     roomInfoBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                                 }
-                                when (mapState.selectedMarker) {
+                                when (val marker = mapState.selectedMarker) {
                                     is Marker.Room -> {
-                                        roomPickerRoomInfo.text = mapState.selectedMarker.roomNumber
-                                        room_title.text = mapState.selectedMarker.roomInfo.name
+                                        roomPickerRoomInfo.text = marker.roomNumber
+                                        room_title.text = marker.roomInfo.name
                                         roomPickerImage.setImageResource(R.drawable.ic_place)
+
+                                        room_info_group.visibility = View.VISIBLE
+                                        room_info_place.room_description_text.text = "${marker.floor} Этаж"
+                                        room_info_department.room_description_text.text = marker.roomInfo.departmentName ?: "Нет информации"
+                                        room_info_description.room_description_text.text = marker.roomInfo.name ?: "Нет информации"
+                                        room_info_equipment.removeAllViews()
+                                        marker.roomInfo.equipment.forEach { equipment ->
+                                            val view = layoutInflater.inflate(R.layout.element_room_equipment, room_info_equipment, false)
+                                            (view as TextView).text = equipment
+                                            room_info_equipment.addView(view)
+                                        }
                                     }
                                     is Marker.Toilet -> {
-                                        roomPickerRoomInfo.text = when (mapState.selectedMarker.type) {
+                                        roomPickerRoomInfo.text = when (marker.type) {
                                             Marker.Toilet.Type.MALE -> "Мужской туалет"
                                             Marker.Toilet.Type.FEMALE -> "Женский туалет"
                                             Marker.Toilet.Type.COMBINED -> "Туалет"
                                         }
                                         room_title.text = "Туалет"
                                         roomPickerImage.setImageResource(R.drawable.ic_toilet)
+                                        room_info_group.visibility = View.GONE
                                     }
                                     is Marker.Entrance -> {
-                                        roomPickerRoomInfo.text = mapState.selectedMarker.labelText
+                                        roomPickerRoomInfo.text = marker.labelText
                                         room_title.text = "Вход"
                                         roomPickerImage.setImageResource(R.drawable.ic_enterance)
+                                        room_info_group.visibility = View.GONE
                                     }
                                     else -> {
                                         room_title.text = ""
                                         roomPickerRoomInfo.text = ""
                                         roomPickerImage.setImageResource(0)
+                                        room_info_group.visibility = View.GONE
                                     }
                                 }
                                 input_room.setText("")

@@ -10,4 +10,6 @@
     <dimen name="floorPickerRadius">8dp</dimen>
     <dimen name="floorAnimationDownTranslation">20dp</dimen>
     <dimen name="floorAnimationUpTranslation">-20dp</dimen>
+
+    <dimen name="roomEquipmentRadius">4dp</dimen>
 </resources>
