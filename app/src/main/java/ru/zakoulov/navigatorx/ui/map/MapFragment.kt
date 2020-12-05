@@ -253,7 +253,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
                                 when (mapState.selectedMarker) {
                                     is Marker.Room -> {
                                         roomPickerRoomInfo.text = mapState.selectedMarker.roomNumber
-                                        room_title.text = mapState.selectedMarker.roomTitle
+                                        room_title.text = mapState.selectedMarker.roomInfo.name
                                         roomPickerImage.setImageResource(R.drawable.ic_place)
                                     }
                                     is Marker.Toilet -> {

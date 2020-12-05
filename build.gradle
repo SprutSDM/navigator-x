@@ -41,6 +41,7 @@ ext {
     recyclerViewVersion = '1.1.0'
     materialVersion = '1.2.1'
     glideVersion = '4.11.0'
+    gsonVersion = '2.8.6'
 
     junitVersion = '4.12'
     androidXTestJunitVersion = '1.1.2'

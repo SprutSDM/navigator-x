@@ -29,8 +29,8 @@ sealed class RoomPickerViewHolder(
         override fun setup(marker: Marker) {
             super.setup(marker)
             (marker as? Marker.Room)?.let { roomMarker ->
-                roomTitle.text = roomMarker.roomTitle
-                roomNumber.text = roomMarker.roomNumber
+                roomTitle.text = roomMarker.roomInfo.name
+                roomNumber.text = "${roomMarker.roomNumber} ${roomMarker.roomInfo.realUsage}"
                 roomImage.setImageResource(R.drawable.ic_place)
             }
         }

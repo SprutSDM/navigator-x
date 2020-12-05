@@ -18,7 +18,7 @@ sealed class Marker(
         building: Building,
         corpus: Int,
         val roomNumber: String,
-        val roomTitle: String
+        val roomInfo: RoomInfo
     ) : Marker(
         id = id,
         scaleVisible = scaleVisible,

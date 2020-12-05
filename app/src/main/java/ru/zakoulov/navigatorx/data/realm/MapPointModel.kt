@@ -1,5 +1,6 @@
 package ru.zakoulov.navigatorx.data.realm
 
+import com.google.gson.annotations.SerializedName
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -45,4 +46,35 @@ open class MapPointModel(
         get() {
             return PointTypeEnum.values().find { it.id == type } ?: PointTypeEnum.OTHER
         }
+}
+
+class RealmRoomInfo {
+    @SerializedName("real_usage")
+    val realUsage: String? = null
+
+    @SerializedName("rt_name")
+    val rtName: String? = null
+
+    @SerializedName("square")
+    val square: String? = null
+
+    @SerializedName("capacity")
+    val capacity: String? = null
+
+    @SerializedName("dep_names")
+    val departmentName: String? = null
+
+    @SerializedName("equipment")
+    val equipment: List<RealmEquipment> = emptyList()
+
+    @SerializedName("reserv_url")
+    val bookUrl: String? = null
+}
+
+class RealmEquipment {
+    @SerializedName("eq_name")
+    val name: String? = null
+
+    @SerializedName("eq_quan")
+    val count: Int = 0
 }

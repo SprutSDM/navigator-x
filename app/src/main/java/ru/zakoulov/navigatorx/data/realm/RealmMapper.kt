@@ -1,11 +1,16 @@
 package ru.zakoulov.navigatorx.data.realm
 
+import android.util.Log
+import com.google.gson.Gson
 import ru.zakoulov.navigatorx.data.Building
 import ru.zakoulov.navigatorx.data.MapData
 import ru.zakoulov.navigatorx.data.Marker
 import ru.zakoulov.navigatorx.data.PathDot
 
-class RealmMapper {
+class RealmMapper(
+    private val gson: Gson,
+    private val realmRoomInfoMapper: RealmRoomInfoMapper
+) {
     fun map(realmPoints: List<MapPointModel>): MapData {
         val markers = mutableListOf<Marker>()
         val pathDots = mutableMapOf<String, PathDot>()
@@ -24,6 +29,7 @@ class RealmMapper {
                 when (it.typeEnum) {
                     PointTypeEnum.PATH -> Unit //TODO
                     PointTypeEnum.ROOM -> {
+                        Log.d("RealmMapper", "map: ${it.info == null} ${it.info}")
                         markers.add(
                             Marker.Room(
                                 id = it._id.toString(),
@@ -34,27 +40,15 @@ class RealmMapper {
                                 building = building,
                                 floor = it.floor,
                                 roomNumber = it.labelText,
-                                roomTitle = it.info
+                                roomInfo = realmRoomInfoMapper.map(
+                                    gson.fromJson(it.info.takeIf { it.isNotEmpty() } ?: "{}", RealmRoomInfo::class.java)
+                                )
                             )
                         )
                     }
                     PointTypeEnum.MESSAGE -> Unit //TODO
                     PointTypeEnum.ICON -> Unit //TODO
-                    PointTypeEnum.OTHER -> {
-                        markers.add(
-                            Marker.Room(
-                                id = it._id.toString(),
-                                scaleVisible = it.scaleVisible.toFloat(),
-                                positionX = it.positionX.toFloat(),
-                                positionY = it.positionY.toFloat(),
-                                corpus = it.korpus,
-                                building = building,
-                                floor = it.floor,
-                                roomNumber = it.labelText,
-                                roomTitle = it.info
-                            )
-                        )
-                    }
+                    PointTypeEnum.OTHER -> Unit // TODO
                     PointTypeEnum.STAIRS_UP, PointTypeEnum.STAIRS_DOWN -> {
                         markers.add(
                             Marker.Stairs(
