@@ -26,7 +26,7 @@ class MainViewModel(
         State.Map(
             mapState = MapState.Viewing,
             markers = realmRepository.mapData.value.markers
-                .filter { it.floor == 1 }
+                .filter { it.floor == 1 && it.building == Building.MAIN_CORPUS }
                 .map { MarkerData(marker = it) },
             selectedBuilding = Building.MAIN_CORPUS,
             floor = 1,
@@ -65,7 +65,7 @@ class MainViewModel(
                         State.Map(
                             mapState = MapState.Viewing,
                             markers = mapData.markers
-                                .filter { it.floor == 1 }
+                                .filter { it.floor == 1 && it.building == Building.MAIN_CORPUS }
                                 .map { MarkerData(marker = it) },
                             selectedBuilding = Building.MAIN_CORPUS,
                             floor = 1,
@@ -79,7 +79,7 @@ class MainViewModel(
                         currentState.copy(
                             mapState = MapState.Viewing,
                             markers = realmRepository.mapData.value.markers
-                                .filter { it.floor == currentState.floor }
+                                .filter { it.floor == currentState.floor && it.building == Building.MAIN_CORPUS }
                                 .map { MarkerData(marker = it) },
                         )
                     }
@@ -275,14 +275,24 @@ class MainViewModel(
     fun onRoomInfoBSClosed() {
         val currentState = state.value
         if (currentState is State.Map && currentState.mapState !is MapState.Viewing) {
-            _state.value = currentState.copy(mapState = MapState.Viewing)
+            _state.value = currentState.copy(
+                mapState = MapState.Viewing,
+                markers = currentState.markers.map {
+                    it.copy(isSelected = false)
+                }
+            )
         }
     }
 
     fun onRoomPickerBSClosed() {
         val currentState = state.value
         if (currentState is State.Map && currentState.mapState !is MapState.Viewing) {
-            _state.value = currentState.copy(mapState = MapState.Viewing)
+            _state.value = currentState.copy(
+                mapState = MapState.Viewing,
+                markers = currentState.markers.map {
+                    it.copy(isSelected = false)
+                }
+            )
         }
     }
 
