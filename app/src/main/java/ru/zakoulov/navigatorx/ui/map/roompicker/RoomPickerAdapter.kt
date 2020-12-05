@@ -20,7 +20,7 @@ class RoomPickerAdapter(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomPickerViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.clickable_element_room, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.element_room_picker, parent, false)
         return when (viewType) {
             TYPE_ROOM -> RoomPickerViewHolder.Room(view, callbacks)
             TYPE_ENTRANCE -> RoomPickerViewHolder.Entrance(view, callbacks)

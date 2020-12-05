@@ -5,5 +5,5 @@
     android:layout_height="wrap_content"
     android:textColor="@android:color/darker_gray"
     android:text="2 ЭТАЖ"
-    android:background="@drawable/shape_room_place_info">
+    android:background="@drawable/shape_room_floor">
 </TextView>

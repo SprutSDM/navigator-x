@@ -17,6 +17,7 @@ sealed class RoomPickerViewHolder(
     }
     protected val roomTitle: TextView = view.findViewById(R.id.room_title)
     protected val roomNumber: TextView = view.findViewById(R.id.marker_text)
+    protected val roomFloor: TextView = view.findViewById(R.id.room_floor)
 
     @CallSuper
     open fun setup(marker: Marker) {
@@ -29,8 +30,14 @@ sealed class RoomPickerViewHolder(
         override fun setup(marker: Marker) {
             super.setup(marker)
             (marker as? Marker.Room)?.let { roomMarker ->
-                roomTitle.text = roomMarker.roomInfo.name
-                roomNumber.text = "${roomMarker.roomNumber} ${roomMarker.roomInfo.realUsage}"
+                if (roomMarker.roomInfo.name != null) {
+                    roomTitle.visibility = View.VISIBLE
+                    roomTitle.text = roomMarker.roomInfo.name
+                } else {
+                    roomTitle.visibility = View.GONE
+                }
+                roomFloor.text = "${roomMarker.floor} ЭТАЖ"
+                roomNumber.text = "${roomMarker.roomNumber} ${roomMarker.roomInfo.realUsage ?: ""}"
                 roomImage.setImageResource(R.drawable.ic_place)
             }
         }
@@ -43,6 +50,7 @@ sealed class RoomPickerViewHolder(
                 roomTitle.text = entranceMarker.labelText
                 roomNumber.text = entranceMarker.labelText
                 roomImage.setImageResource(R.drawable.ic_enterance)
+                roomFloor.text = "${entranceMarker.floor} ЭТАЖ"
             }
         }
     }

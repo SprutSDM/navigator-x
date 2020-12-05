@@ -5,11 +5,11 @@ import ru.zakoulov.navigatorx.data.RoomInfo
 class RealmRoomInfoMapper {
     fun map(realmRoomInfo: RealmRoomInfo): RoomInfo {
         return RoomInfo(
-            square = realmRoomInfo.square ?: "Нет информации",
-            name = realmRoomInfo.rtName?.capitalize() ?: "Нет информации",
-            capacity = realmRoomInfo.capacity ?: "Нет информации",
-            realUsage = realmRoomInfo.realUsage?.capitalize() ?: "Нет информации",
-            departmentName = realmRoomInfo.capacity?.capitalize() ?: "Нет информации",
+            square = realmRoomInfo.square?.takeIf { !it.equals("нет информации", ignoreCase = true) },
+            name = realmRoomInfo.rtName?.takeIf { !it.equals("нет информации", ignoreCase = true) }?.capitalize(),
+            capacity = realmRoomInfo.capacity?.takeIf { !it.equals("нет информации", ignoreCase = true) }?.capitalize(),
+            realUsage = realmRoomInfo.realUsage?.takeIf { !it.equals("нет информации", ignoreCase = true) }?.capitalize(),
+            departmentName = realmRoomInfo.capacity?.takeIf { !it.equals("нет информации", ignoreCase = true) }?.capitalize(),
             equipment = realmRoomInfo.equipment.map {
                 when {
                     it.name == null || it.count == 0 -> ""
