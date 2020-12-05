@@ -145,12 +145,14 @@ class MainViewModel(
     }
 
     private fun filterRooms(matchText: String, buildingId: Int): List<Marker> {
+        val trimmedMatchText = matchText.trim()
         fun isRoomMatches(roomMarker: Marker.Room): Boolean {
-            return matchText.isEmpty() || roomMarker.roomNumber.contains(matchText, ignoreCase = true)
+            return trimmedMatchText.isEmpty() || roomMarker.roomNumber.contains(trimmedMatchText, ignoreCase = true) ||
+                    roomMarker.roomInfo.realUsage?.contains(trimmedMatchText, ignoreCase = true) == true
         }
 
         fun isEntranceMatches(entranceMarker: Marker.Entrance): Boolean {
-            return matchText.isEmpty() || entranceMarker.labelText.contains(matchText, ignoreCase = true)
+            return trimmedMatchText.isEmpty() || entranceMarker.labelText.contains(trimmedMatchText, ignoreCase = true)
         }
 
         return realmRepository.mapData.value.markers.filter {
