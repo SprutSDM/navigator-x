@@ -98,6 +98,10 @@ class MainViewModel(
                             .map { MarkerData(marker = it) },
                         selectedBuilding = selectedBuilding,
                         floor = 1,
+                        departureMarker = null,
+                        destinationMarker = null,
+                        floorPaths = null,
+                        pathInfo = null
                     )
                     focusOnMainEntrance()
                 }
