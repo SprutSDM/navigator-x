@@ -79,7 +79,7 @@
             app:animationDuration="420"
             app:pathAnimationDuration="1000"
             app:hasClickableChildren="false"
-            app:background="@drawable/lomo1"
+            app:background="@drawable/kronv_1"
             app:mapWidth="5000"
             app:mapHeight="5000"
             app:pathColor="@color/colorPrimary"
