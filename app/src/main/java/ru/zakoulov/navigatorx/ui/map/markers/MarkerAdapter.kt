@@ -36,6 +36,7 @@ class MarkerAdapter(
             TYPE_STAIRS -> MarkerViewHolder.Stairs(inflateView(R.layout.marker), callbacks)
             TYPE_ENTRANCE -> MarkerViewHolder.Entrance(inflateView(R.layout.marker), callbacks)
             TYPE_TOILET -> MarkerViewHolder.Toilet(inflateView(R.layout.marker), callbacks)
+            TYPE_MESSAGE -> MarkerViewHolder.Message(inflateView(R.layout.marker_message), callbacks)
             else -> throw IllegalStateException("Unknown marker type: ${type}")
         }
     }
@@ -56,6 +57,7 @@ class MarkerAdapter(
             is Marker.Stairs -> TYPE_STAIRS
             is Marker.Toilet -> TYPE_TOILET
             is Marker.Entrance -> TYPE_ENTRANCE
+            is Marker.Message -> TYPE_MESSAGE
             else -> throw IllegalStateException("Unsupported marker: ${markerData.marker}")
         }
     }
@@ -87,5 +89,6 @@ class MarkerAdapter(
         private const val TYPE_STAIRS = 1
         private const val TYPE_TOILET = 2
         private const val TYPE_ENTRANCE = 3
+        private const val TYPE_MESSAGE = 4
     }
 }

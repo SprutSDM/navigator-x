@@ -29,7 +29,6 @@ class RealmMapper(
                 when (it.typeEnum) {
                     PointTypeEnum.PATH -> Unit //TODO
                     PointTypeEnum.ROOM -> {
-                        Log.d("RealmMapper", "map: ${it.info == null} ${it.info}")
                         markers.add(
                             Marker.Room(
                                 id = it._id.toString(),
@@ -46,7 +45,20 @@ class RealmMapper(
                             )
                         )
                     }
-                    PointTypeEnum.MESSAGE -> Unit //TODO
+                    PointTypeEnum.MESSAGE -> {
+                        markers.add(
+                            Marker.Message(
+                                id = it._id.toString(),
+                                scaleVisible = it.scaleVisible.toFloat(),
+                                positionX = it.positionX.toFloat(),
+                                positionY = it.positionY.toFloat(),
+                                corpus = it.korpus,
+                                building = building,
+                                floor = it.floor,
+                                message = it.labelText
+                            )
+                        )
+                    }
                     PointTypeEnum.ICON -> Unit //TODO
                     PointTypeEnum.OTHER -> Unit // TODO
                     PointTypeEnum.STAIRS_UP, PointTypeEnum.STAIRS_DOWN -> {

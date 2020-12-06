@@ -180,6 +180,11 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
         override fun getIconResFrom(markerData: MarkerData) = 0
     }
 
+    class Message(view: View, callbacks: MarkerCallbacks) : MarkerViewHolder(view, callbacks) {
+        override fun getTextFrom(markerData: MarkerData) = (markerData.marker as Marker.Message).message
+        override fun getIconResFrom(markerData: MarkerData) = 0
+    }
+
     companion object {
         private const val DEPTH_SHIFT = 0.02f
     }
