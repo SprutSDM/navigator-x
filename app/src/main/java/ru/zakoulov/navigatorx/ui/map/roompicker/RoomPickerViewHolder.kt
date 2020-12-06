@@ -12,9 +12,7 @@ sealed class RoomPickerViewHolder(
     view: View,
     protected val callbacks: RoomPickerCallbacks
 ) : RecyclerView.ViewHolder(view) {
-    protected val roomImage = view.findViewById<AppCompatImageView>(R.id.room_image).apply {
-        clipToOutline = true
-    }
+    protected val roomImage: AppCompatImageView = view.findViewById(R.id.room_image)
     protected val roomTitle: TextView = view.findViewById(R.id.room_title)
     protected val roomNumber: TextView = view.findViewById(R.id.marker_text)
     protected val roomFloor: TextView = view.findViewById(R.id.room_floor)
@@ -49,7 +47,7 @@ sealed class RoomPickerViewHolder(
             (marker as? Marker.Entrance)?.let { entranceMarker ->
                 roomTitle.text = entranceMarker.labelText
                 roomNumber.text = entranceMarker.labelText
-                roomImage.setImageResource(R.drawable.ic_enterance)
+                roomImage.setImageResource(R.drawable.ic_entrance)
                 roomFloor.text = "${entranceMarker.floor} ЭТАЖ"
             }
         }

@@ -28,6 +28,7 @@ import com.otaliastudios.zoom.ZoomMap
 import com.otaliastudios.zoom.ZoomMapAdapter
 import com.otaliastudios.zoom.ZoomMapViewHolder
 import kotlinx.android.synthetic.main.element_room.room_title
+import kotlinx.android.synthetic.main.element_room_description.view.room_description_image
 import kotlinx.android.synthetic.main.element_room_description.view.room_description_text
 import kotlinx.android.synthetic.main.fragment_map.building_title
 import kotlinx.android.synthetic.main.fragment_map.down_floor_arrow
@@ -161,7 +162,10 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
         }
         roomPickerRoomInfo = bottom_sheet_room_info.findViewById(R.id.marker_text)
         roomPickerImage = bottom_sheet_room_info.findViewById(R.id.room_image)
-        roomPickerImage.clipToOutline = true
+
+        room_info_place.room_description_image.setImageResource(R.drawable.ic_description_place)
+        room_info_department.room_description_image.setImageResource(R.drawable.ic_description_department)
+        room_info_description.room_description_image.setImageResource(R.drawable.ic_description_info)
 
         lifecycleScope.launch {
             viewModel.events.collect {
@@ -287,7 +291,7 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
                                     is Marker.Entrance -> {
                                         roomPickerRoomInfo.text = marker.labelText
                                         room_title.text = "Вход"
-                                        roomPickerImage.setImageResource(R.drawable.ic_enterance)
+                                        roomPickerImage.setImageResource(R.drawable.ic_entrance)
                                         room_info_group.visibility = View.GONE
                                     }
                                     else -> {

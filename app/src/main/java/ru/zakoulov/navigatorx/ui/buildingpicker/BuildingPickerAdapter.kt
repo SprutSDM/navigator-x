@@ -36,9 +36,7 @@ class BuildingPickerAdapter(
     override fun getItemCount() = buildings.size
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val buildingImage: ImageView = view.findViewById<AppCompatImageView>(R.id.building_image).apply {
-            clipToOutline = true
-        }
+        private val buildingImage: ImageView = view.findViewById<AppCompatImageView>(R.id.building_image)
         private val buildingTitle: TextView = view.findViewById(R.id.building_title)
         private val buildingDescription: TextView = view.findViewById(R.id.building_description)
 
