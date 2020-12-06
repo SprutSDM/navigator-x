@@ -1,5 +1,6 @@
 package ru.zakoulov.navigatorx.ui.map.markers
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,11 @@ class MarkerAdapter(
 
     override fun createViewHolder(parent: ViewGroup, type: Int): MarkerViewHolder {
         fun inflateView(@LayoutRes layoutResId: Int): View {
-            return LayoutInflater.from(parent.context).inflate(layoutResId, parent, false)
+            val time = System.currentTimeMillis()
+            return LayoutInflater.from(parent.context).inflate(layoutResId, parent, false).also {
+                val time2 = System.currentTimeMillis()
+                Log.d(TAG, "inflateView: ${time2 - time}")
+            }
         }
 
         return when (type) {

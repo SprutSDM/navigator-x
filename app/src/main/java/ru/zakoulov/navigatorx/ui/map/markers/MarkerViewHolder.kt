@@ -17,6 +17,7 @@ import ru.zakoulov.navigatorx.ui.setTintColor
 sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbacks) : ZoomMapViewHolder(view) {
     private var markerPointer: ImageView = view.findViewById(R.id.marker_pointer)
     private var markerText: TextView = view.findViewById(R.id.marker_text)
+    private var markerHitbox: View = view.findViewById(R.id.marker_hitbox)
 
     private var positionX: Float = 0f
     private var positionY: Float = 0f
@@ -42,7 +43,7 @@ sealed class MarkerViewHolder(view: View, protected val callbacks: MarkerCallbac
             isVisible = true
         }
         markerId = markerData.marker.id
-        view.setOnClickListener {
+        markerHitbox.setOnClickListener {
             callbacks.onMarkerSelected(markerData.marker)
         }
         markerText.text = getTextFrom(markerData)
