@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:paddingTop="40dp"
     android:paddingStart="12dp"
-    android:paddingEnd="12dp"
-    android:paddingBottom="16dp">
+    android:paddingEnd="12dp">
     <item
         android:top="16dp">
         <shape

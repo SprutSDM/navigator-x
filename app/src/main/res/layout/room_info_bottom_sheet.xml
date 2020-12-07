@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/shape_bottom_sheet"
     android:elevation="16dp"
+    android:paddingBottom="16dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     app:behavior_hideable="true"
     app:behavior_peekHeight="140dp">
