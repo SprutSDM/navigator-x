@@ -9,7 +9,7 @@ android {
     buildToolsVersion "30.0.1"
 
     defaultConfig {
-        applicationId "ru.zakoulov.navigatorx"
+        applicationId "ru.itmo.navigatorx"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1

@@ -80,17 +80,6 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
     private lateinit var roomPickerRoomInfo: TextView
     private lateinit var roomPickerImage: AppCompatImageView
 
-//    private val rawMarkers = List(200) {
-//        RawMarkerData(
-//            id = it,
-//            x = Random.nextInt(IMAGE_WIDTH),
-//            y = Random.nextInt(IMAGE_HEIGHT),
-//            label = Random.nextInt(100, 10000).toString()
-//        )
-//    }
-//
-//    private val map = Map(rawMarkers)
-
     lateinit var markerAdapter: MarkerAdapter
     lateinit var roomPickerAdapter: RoomPickerAdapter
 
@@ -416,8 +405,5 @@ class MapFragment : Fragment(R.layout.fragment_map), MarkerCallbacks, RoomPicker
 
     companion object {
         const val TAG = "MapFragment"
-
-        private const val IMAGE_WIDTH = 4086
-        private const val IMAGE_HEIGHT = 4086
     }
 }
