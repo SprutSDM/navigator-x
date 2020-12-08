@@ -29,7 +29,6 @@
                     android:id="@+id/building_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Ломоносово"
                     android:textStyle="bold"
                     android:maxLines="1"
                     android:ellipsize="end"

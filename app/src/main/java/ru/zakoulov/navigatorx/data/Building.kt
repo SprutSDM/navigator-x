@@ -30,7 +30,7 @@ enum class Building(
     ),
     LOMO(
         id = 1,
-        title = "Корпус на Ломоносово",
+        title = "Корпус на Ломоносова",
         address = "Улица Ломоносова, д. 9",
         floors = 6,
         floorsBitmapRes = listOf(
